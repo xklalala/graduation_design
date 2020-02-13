@@ -4,8 +4,9 @@ import (
 	"byxt/admin/pkg/setting"
 	"encoding/json"
 	"fmt"
-	"github.com/gomodule/redigo/redis"
 	"time"
+
+	"github.com/gomodule/redigo/redis"
 )
 
 var RedisConn *redis.Pool
@@ -33,7 +34,7 @@ func Setup() error {
 			return err
 		},
 	}
-	fmt.Println("reidssetup")
+	fmt.Println("redis连接成功")
 	return nil
 }
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import Footer from '../footer/footer'
+import Footer from './footer/footer'
 import 'antd/dist/antd.css';
 import './login.less'
 import MConfig from '../config'
@@ -12,7 +12,7 @@ const options = [
     { label: '学生', value: 'stu' },
     { label: '教师', value: 'tea' },
     { label: '管理员', value: 'adm' },
-  ];
+];
 
 class Login extends React.Component {
 
@@ -48,9 +48,6 @@ class Login extends React.Component {
     }
     handleSubmit = e => {
         e.preventDefault();
-        
-
-
         this.props.form.validateFields((err, values) => {
 
 
@@ -91,7 +88,8 @@ class Login extends React.Component {
                                 self.login_success()
                                 localStorage.setItem("token", response.data.data)
                                 localStorage.setItem("sf", values.loginType)
-                                self.props.history.push('/admin')
+                                self.props.history.push("/admin")
+                                
                             } else {
                                 self.login_error(response.data.message)
                             }
