@@ -11,9 +11,10 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 //用户登录
@@ -21,7 +22,7 @@ func Login(c *gin.Context) {
 	var login request_struct.Login
 	//如果用户验证成功
 	if err := c.ShouldBind(&login); err != nil {
-		code.R(http.StatusOK, code.USER_PARAMS_NOT_NULL,"", c)
+		code.R(http.StatusOK, code.USER_PARAMS_NOT_NULL, "", c)
 	} else {
 		fmt.Println(c.ClientIP())
 
@@ -37,29 +38,29 @@ func Login(c *gin.Context) {
 		password = hex.EncodeToString(h.Sum(nil))
 
 		switch login.Type {
-			//教师登录
-			case "tea":
-				//判断教师系统是否开放
-				if sys_args.GetTeaEntry() == "FALSE" {
-					codes = code.SYSTEM_CLOSE
-				} else {
-					//系统开放
-					codes = user.TeacherLogin(username, password)
-				}
-			// 管理员登录
-			case "adm":
-				codes = user.Login(username, password)
-			//学生登录
-			case "stu":
-				//判断学生系统是否开放
-				if sys_args.GetStuEntry() == "FALSE" {
-					codes = code.SYSTEM_CLOSE
-				} else {
-					//系统开放
-					codes = user.StuLogin(username, password)
-				}
-			default:
-				codes = code.USER_LOGIN_TYPE_ERROR
+		//教师登录
+		case "tea":
+			//判断教师系统是否开放
+			if sys_args.GetTeaEntry() == "FALSE" {
+				codes = code.SYSTEM_CLOSE
+			} else {
+				//系统开放
+				codes = user.TeacherLogin(username, password)
+			}
+		// 管理员登录
+		case "adm":
+			codes = user.Login(username, password)
+		//学生登录
+		case "stu":
+			//判断学生系统是否开放
+			if sys_args.GetStuEntry() == "FALSE" {
+				codes = code.SYSTEM_CLOSE
+			} else {
+				//系统开放
+				codes = user.StuLogin(username, password)
+			}
+		default:
+			codes = code.USER_LOGIN_TYPE_ERROR
 		}
 
 		//登陆成功，缓存信息
@@ -68,15 +69,17 @@ func Login(c *gin.Context) {
 			h.Write([]byte(username + time.Now().Format("2006-01-02 15:04:05")))
 			token = hex.EncodeToString(h.Sum(nil))
 
-			err := redis.Set(token, login.Type + c.ClientIP(), int(time.Second * 30))
+			err := redis.Set(token, login.Type+c.ClientIP(), int(time.Second*30))
 			if err != nil {
 				codes = code.SERVER_ERROR
 			}
+			fmt.Println("token", token)
 
 			data, _ := redis.Get(token)
 			fmt.Println(data[1:4])
 
 		}
+		fmt.Println(codes)
 
 		code.R(http.StatusOK, codes, token, c)
 	}
@@ -84,11 +87,11 @@ func Login(c *gin.Context) {
 func Test(c *gin.Context) {
 	fmt.Println(c.ClientIP(), c)
 	c.JSON(http.StatusOK, gin.H{
-		"code": 200,
+		"code":    200,
 		"message": code.GetMsg(200),
-		"data": map[string]interface{} {
+		"data": map[string]interface{}{
 			"name": "xk",
-			"age": "12",
+			"age":  "12",
 		},
 	})
 }
@@ -97,9 +100,9 @@ func Test(c *gin.Context) {
 func ForgetPassword(c *gin.Context) {
 	name := c.PostForm("name")
 	c.JSON(http.StatusOK, gin.H{
-		"code" : 200,
+		"code":    200,
 		"message": code.GetMsg(200),
-		"data": map[string]interface{} {
+		"data": map[string]interface{}{
 			"name": name,
 		},
 	})
