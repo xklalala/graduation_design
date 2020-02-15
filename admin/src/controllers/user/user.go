@@ -24,8 +24,7 @@ func Login(c *gin.Context) {
 	if err := c.ShouldBind(&login); err != nil {
 		code.R(http.StatusOK, code.USER_PARAMS_NOT_NULL, "", c)
 	} else {
-		fmt.Println(c.ClientIP())
-
+		var user_real_name string
 		var codes int
 		var token string
 		//用户名密码
@@ -45,11 +44,12 @@ func Login(c *gin.Context) {
 				codes = code.SYSTEM_CLOSE
 			} else {
 				//系统开放
-				codes = user.TeacherLogin(username, password)
+				codes, user_real_name = user.TeacherLogin(username, password)
 			}
 		// 管理员登录
 		case "adm":
 			codes = user.Login(username, password)
+			user_real_name = username
 		//学生登录
 		case "stu":
 			//判断学生系统是否开放
@@ -57,7 +57,7 @@ func Login(c *gin.Context) {
 				codes = code.SYSTEM_CLOSE
 			} else {
 				//系统开放
-				codes = user.StuLogin(username, password)
+				codes, user_real_name = user.StuLogin(username, password)
 			}
 		default:
 			codes = code.USER_LOGIN_TYPE_ERROR
@@ -71,17 +71,23 @@ func Login(c *gin.Context) {
 
 			err := redis.Set(token, login.Type+c.ClientIP(), int(time.Second*30))
 			if err != nil {
+				fmt.Print(err.Error())
 				codes = code.SERVER_ERROR
 			}
 			fmt.Println("token", token)
 
 			data, _ := redis.Get(token)
-			fmt.Println(data[1:4])
+			fmt.Print(data)
+			//fmt.Println(data[1:4])
 
 		}
 		fmt.Println(codes)
+		res := map[string]interface{}{
+			"token":    token,
+			"username": user_real_name,
+		}
 
-		code.R(http.StatusOK, codes, token, c)
+		code.R(http.StatusOK, codes, res, c)
 	}
 }
 func Test(c *gin.Context) {

@@ -86,7 +86,9 @@ class Login extends React.Component {
                         .then(function (response) {
                             if (response.data.code === 20005) {
                                 self.login_success()
-                                localStorage.setItem("token", response.data.data)
+                                console.log(response.data)
+                                localStorage.setItem("token", response.data.data.token)
+                                localStorage.setItem("name", response.data.data.username)
                                 localStorage.setItem("sf", values.loginType)
                                 self.props.history.push("/admin")
                                 

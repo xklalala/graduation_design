@@ -24,15 +24,15 @@ class Admin extends React.Component {
         <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
           <div className="logo" />
           <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-            <Menu.Item key="0">
+            <Menu.Item key="1">
             <Icon type="home" />
             <span>首页</span>
             </Menu.Item>
-            <Menu.Item key="1">
+            <Menu.Item key="2">
             <Icon type="tool" />
               <span>系统配置</span>
             </Menu.Item>
-            <Menu.Item key="2">
+            <Menu.Item key="3">
             <Icon type="user" />
               <span>账号管理</span>
             </Menu.Item>

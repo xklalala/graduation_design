@@ -6,6 +6,7 @@ import Admin from './pages/admin/admin'
 import Footer from './pages/login/footer/footer'
 import NoMatch from './pages/nomatch/nomatch'
 import SysConf from './pages/admin/sysconfig/sysconfig'
+import Exit from './pages/public/js/exit'
 
 class MyRouter extends React.Component {
     
@@ -15,9 +16,11 @@ class MyRouter extends React.Component {
             <HashRouter>
                 <App>
                     <Route path="/login" component={Login} />
+                    <Route path="/exit" component={Exit} />
                     <Route path="/admin" render={()=>
                         <Admin>
                             <Switch>
+                                <Route path="/" component={SysConf} />
                                 <Route path="/admin/sysconf" component={SysConf} />
                                 <Route exact component={NoMatch} />
                             </Switch>

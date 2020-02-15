@@ -1,12 +1,14 @@
 package admin
 
 import "byxt/admin/inits/mysql"
+
 type SysParams struct {
-	ParamName string 	`json:"param_name"`
-	ParamValue string 	`json:"param_value"`
+	ParamName  string `json:"param_name"`
+	ParamValue string `json:"param_value"`
 }
 
-func SetStudent(status string) error{
+//设置学生系统是否开放
+func SetStudent(status string) error {
 
 	if status == "TRUE" || status == "FALSE" {
 
@@ -25,7 +27,8 @@ func SetStudent(status string) error{
 	}
 }
 
-func SetTeacher(status string) error{
+//设置教师系统是否开放
+func SetTeacher(status string) error {
 
 	if status == "TRUE" || status == "FALSE" {
 

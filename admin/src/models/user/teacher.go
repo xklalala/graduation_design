@@ -5,23 +5,25 @@ import (
 	"byxt/admin/pkg/code"
 	"byxt/admin/pkg/mlog"
 )
+
 type UserTeacher struct {
-	TeacherId 		string `json:"teacher_id"`
+	TeacherId       string `json:"teacher_id"`
+	TeacherName     string `json:"teacher_name"`
 	TeacherPassword string `json:"teacher_password"`
-	PhoneNumber 	string `json:"phone_number"`
-	AnotherContact 	string `json:"another_contact"`
-	TeacherStatus 	string `json:"teacher_status"`
+	PhoneNumber     string `json:"phone_number"`
+	AnotherContact  string `json:"another_contact"`
+	TeacherStatus   string `json:"teacher_status"`
 }
 
-func TeacherLogin(username, password string) int {
+func TeacherLogin(username, password string) (int, string) {
 	var teacher UserTeacher
-	err := mysql.Db.Select("teacher_password").Where("teacher_id = ?", username).First(&teacher)
+	err := mysql.Db.Select("teacher_password, teacher_name").Where("teacher_id = ?", username).First(&teacher)
 	if err.Error != nil {
 		mlog.Info(err.Error)
-		return code.USER_USER_NOT_EXIST
+		return code.USER_USER_NOT_EXIST, ""
 	}
 	if teacher.TeacherPassword != password {
-		return code.USER_USER_OR_PWD_FALSE
+		return code.USER_USER_OR_PWD_FALSE, ""
 	}
-	return code.USER_LOGIN_SUCCESS
+	return code.USER_LOGIN_SUCCESS, teacher.TeacherName
 }
