@@ -1,8 +1,9 @@
 import React from 'react'
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
-import { Route } from 'react-router-dom';
+import { Route, Link } from 'react-router-dom';
 import Sysconf from './sysconfig/sysconfig'
 import MyHeader from './myheader/myheader'
+import IsLogin from '../public/js/isLogin'
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -18,9 +19,12 @@ class Admin extends React.Component {
   };
 
   render() {
+    
     console.log("token"+localStorage.getItem("token"))
     return (
+      
       <Layout style={{ minHeight: '100vh' }}>
+        <IsLogin />
         <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
           <div className="logo" />
           <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
@@ -30,11 +34,11 @@ class Admin extends React.Component {
             </Menu.Item>
             <Menu.Item key="2">
             <Icon type="tool" />
-              <span>系统配置</span>
+              <span><Link to="/admin/sysconf">系统配置</Link> </span>
             </Menu.Item>
             <Menu.Item key="3">
             <Icon type="user" />
-              <span>账号管理</span>
+              <span><Link to="/admin/adminuser">账号管理</Link></span>
             </Menu.Item>
             <SubMenu
               key="sub1"

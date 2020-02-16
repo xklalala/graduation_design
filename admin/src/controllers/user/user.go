@@ -40,7 +40,7 @@ func Login(c *gin.Context) {
 		//教师登录
 		case "tea":
 			//判断教师系统是否开放
-			if sys_args.GetTeaEntry() == "FALSE" {
+			if sys_args.GetTeaEntry() == "\"false\"" {
 				codes = code.SYSTEM_CLOSE
 			} else {
 				//系统开放
@@ -52,8 +52,9 @@ func Login(c *gin.Context) {
 			user_real_name = username
 		//学生登录
 		case "stu":
+			fmt.Printf(sys_args.GetStuEntry())
 			//判断学生系统是否开放
-			if sys_args.GetStuEntry() == "FALSE" {
+			if sys_args.GetStuEntry() == "\"false\"" {
 				codes = code.SYSTEM_CLOSE
 			} else {
 				//系统开放
@@ -79,7 +80,6 @@ func Login(c *gin.Context) {
 			data, _ := redis.Get(token)
 			fmt.Print(data)
 			//fmt.Println(data[1:4])
-
 		}
 		fmt.Println(codes)
 		res := map[string]interface{}{

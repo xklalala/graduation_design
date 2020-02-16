@@ -4,6 +4,7 @@ import (
 	"byxt/admin/pkg/cors"
 	"byxt/admin/pkg/setting"
 	"byxt/admin/src/controllers"
+	admins "byxt/admin/src/controllers/admin"
 	users "byxt/admin/src/controllers/user"
 	"github.com/gin-gonic/gin"
 )
@@ -31,6 +32,9 @@ func InitRouter() *gin.Engine {
 		//获取前台路由列表
 		admin.GET("/getRoutesList", )
 		admin.POST("/setTeaEntryStatus")
+		admin.GET("/getTeaAndStuStatus", admins.GetSutTeaStatus)
+		admin.POST("/setTeaEntry", admins.SetTeaEnterStatus)
+		admin.POST("/setStuEntry", admins.SetStuEnterStatus)
 	}
 
 	stu := r.Group("api/stu")

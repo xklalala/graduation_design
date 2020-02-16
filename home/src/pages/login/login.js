@@ -29,23 +29,6 @@ class Login extends React.Component {
         message.error("系统发生错误，请重试")
     };
 
-    componentDidMount() {
-        Axios.get(
-            MConfig.request_url + '/getPublicSecret', 
-        )
-        .then(function (response) {
-            //公钥获取成功
-            if (response.data.code === 10005) {
-                this.setState({
-                    publicSecritKey: response.data.data
-                })
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-
-    }
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
