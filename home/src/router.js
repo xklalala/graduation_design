@@ -8,6 +8,7 @@ import NoMatch from './pages/nomatch/nomatch'
 import SysConf from './pages/admin/sysconfig/sysconfig'
 import AdminUser from './pages/admin/user/admin'
 import Exit from './pages/public/js/exit'
+import EditUserInfo from './pages/admin/editUserInfo/editUserInfo';
 
 class MyRouter extends React.Component {
     
@@ -24,6 +25,7 @@ class MyRouter extends React.Component {
                                 <Route exact path="/" component={SysConf} />
                                 <Route path="/admin/sysconf" component={SysConf} />
                                 <Route path="/admin/adminuser" component={AdminUser} />
+                                <Route path="/admin/editUserInfo" component={EditUserInfo} />
                                 <Route exact component={NoMatch} />
                             </Switch>
                         </Admin>

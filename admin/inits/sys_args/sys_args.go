@@ -15,7 +15,7 @@ func InitArgs() {
 	//如果redis不存在缓存
 	if !isset {
 		var args []sysParams
-		mysql.Db.Select("*").Where("id > 0").Find(&args)
+		mysql.Db.Select("*").Where("param_name = ? OR param_name = ?", "STUDENT_ENTRY", "TEACHER_ENTRY").Find(&args)
 		for _, v := range args {
 			if v.ParamName == "STUDENT_ENTRY" {
 				redis.Set("STUDENT_ENTRY", v.ParamValue, int(time.Second * 30))

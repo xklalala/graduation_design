@@ -1,12 +1,16 @@
 package router
 
 import (
+	"byxt/admin/pem"
+	code2 "byxt/admin/pkg/code"
 	"byxt/admin/pkg/cors"
+	"byxt/admin/pkg/middleware/jwt"
 	"byxt/admin/pkg/setting"
 	"byxt/admin/src/controllers"
 	admins "byxt/admin/src/controllers/admin"
 	users "byxt/admin/src/controllers/user"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func InitRouter() *gin.Engine {
@@ -28,13 +32,18 @@ func InitRouter() *gin.Engine {
 	}
 
 	admin := r.Group("api/admin")
-	{
-		//获取前台路由列表
+	admin.Use(jwt.JWT("adm"))
+	{	//获取前台路由列表
 		admin.GET("/getRoutesList", )
 		admin.POST("/setTeaEntryStatus")
+		//获取教师和学生的系统状态
 		admin.GET("/getTeaAndStuStatus", admins.GetSutTeaStatus)
+		//设置教师系统状态
 		admin.POST("/setTeaEntry", admins.SetTeaEnterStatus)
+		//设置学生系统状态
 		admin.POST("/setStuEntry", admins.SetStuEnterStatus)
+		//更新系统秘钥
+		admin.GET("/updateSecretKey", updateSecretKey)
 	}
 
 	stu := r.Group("api/stu")
@@ -47,4 +56,16 @@ func InitRouter() *gin.Engine {
 		tea.GET("getRoutesList")
 	}
 	return r
+}
+
+
+//更新秘钥
+func updateSecretKey(c *gin.Context) {
+	var code int
+	if err := pem.GenRsaKey(1024); err != nil {
+		code = code2.ERROR
+	} else {
+		code = code2.SUCCESS
+	}
+	code2.R(http.StatusOK, code, "", c)
 }

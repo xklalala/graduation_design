@@ -16,6 +16,9 @@ const (
 	USER_LOGIN_TYPE_ERROR 	= 20004		//登陆类型错误
 	USER_LOGIN_SUCCESS		= 20005		//登陆成功
 
+	TOKEN_ERROR				= 30001		//token错误
+	TOKEN_TIME_OUT			= 30002		//身份信息超时
+	TOKEN_PERMISSION_DENY   = 30003		//权限不足
 
 
 )

@@ -4,6 +4,7 @@ import (
 	_ "byxt/admin/inits/mysql"
 	"byxt/admin/inits/redis"
 	"byxt/admin/inits/sys_args"
+	"byxt/admin/pem"
 	"byxt/admin/pkg/setting"
 	"byxt/admin/router"
 	"fmt"
@@ -25,8 +26,8 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	//更新秘钥
-	//pem.GenRsaKey(1024)
+	//系统启动，生成秘钥
+	pem.GenRsaKey(1024)
 
 
 	err = s.ListenAndServe()

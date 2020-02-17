@@ -10,11 +10,9 @@ class MyHeader extends React.Component {
     exitSys = () => {
         localStorage.clear()
     }
-
     getUserName = () => {
         
         let username = localStorage.getItem("name")
-        console.log(username)
         if (username === null) {     
            return null
         } else {

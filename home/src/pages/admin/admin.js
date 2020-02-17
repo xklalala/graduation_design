@@ -1,9 +1,10 @@
 import React from 'react'
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
-import { Route, Link } from 'react-router-dom';
+import { Route, NavLink } from 'react-router-dom';
 import Sysconf from './sysconfig/sysconfig'
 import MyHeader from './myheader/myheader'
 import IsLogin from '../public/js/isLogin'
+import MenuList from './config'
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -12,47 +13,25 @@ class Admin extends React.Component {
   state = {
     collapsed: false,
   };
-
+  componentWillMount() {
+	  const menuTreeNode = this.renderMenu(MenuList)
+	  this.setState({
+		  menuTreeNode
+	})
+}
   onCollapse = collapsed => {
     console.log(collapsed);
     this.setState({ collapsed });
   };
 
   render() {
-    
-    console.log("token"+localStorage.getItem("token"))
     return (
-      
       <Layout style={{ minHeight: '100vh' }}>
         <IsLogin />
         <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
           <div className="logo" />
           <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-            <Menu.Item key="1">
-            <Icon type="home" />
-            <span>首页</span>
-            </Menu.Item>
-            <Menu.Item key="2">
-            <Icon type="tool" />
-              <span><Link to="/admin/sysconf">系统配置</Link> </span>
-            </Menu.Item>
-            <Menu.Item key="3">
-            <Icon type="user" />
-              <span><Link to="/admin/adminuser">账号管理</Link></span>
-            </Menu.Item>
-            <SubMenu
-              key="sub1"
-              title={
-                <span>
-                  <Icon type="user" />
-                  <span>选题管理</span>
-                </span>
-              }
-            >
-              <Menu.Item key="3">Tom</Menu.Item>
-              <Menu.Item key="4">Bill</Menu.Item>
-              <Menu.Item key="5">Alex</Menu.Item>
-            </SubMenu>
+		  { this.state.menuTreeNode }
           </Menu>
         </Sider>
         <Layout>
@@ -74,5 +53,20 @@ class Admin extends React.Component {
       </Layout>
     );
   }
+  renderMenu = (data) => {
+    return data.map((item)=>{
+      if (item.children) {
+          return (
+              <SubMenu title={item.title} key={item.key}>
+                  { this.renderMenu(item.children) }
+              </SubMenu>
+          )
+      }
+      return <Menu.Item key={item.key}><NavLink to={item.key}><Icon type={item.icon} />{item.title}</NavLink></Menu.Item>
+          
+  	})
+  }
 }
+
+
 export default Admin

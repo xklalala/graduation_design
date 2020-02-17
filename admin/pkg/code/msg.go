@@ -17,6 +17,10 @@ var msgFlags = map[int]string{
 	USER_LOGIN_SUCCESS:			"登陆成功",
 	SYSTEM_CLOSE:				"对不起，系统已经关闭, 无法进入系统",
 	REQUEST_PARMS_ERROR:		"请求参数错误",
+
+	TOKEN_ERROR:				"身份信息错误",
+	TOKEN_TIME_OUT:				"身份信息超时",
+	TOKEN_PERMISSION_DENY: 		"请勿越权访问",
 }
 
 func GetMsg(code int) string {
@@ -25,7 +29,6 @@ func GetMsg(code int) string {
 		return msg
 	}
 	return msgFlags[ERROR]
-
 }
 
 func R(httpcode, code int, data interface{}, c *gin.Context) {
