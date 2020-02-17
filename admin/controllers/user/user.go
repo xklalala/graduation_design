@@ -3,11 +3,11 @@ package user
 import (
 	"byxt/admin/inits/redis"
 	"byxt/admin/inits/sys_args"
+	"byxt/admin/models/user"
 	"byxt/admin/pem"
 	"byxt/admin/pkg/code"
 	"byxt/admin/pkg/setting"
 	"byxt/admin/router/request_struct"
-	"byxt/admin/src/models/user"
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
@@ -67,19 +67,18 @@ func Login(c *gin.Context) {
 		//登陆成功，缓存信息
 		if codes == code.USER_LOGIN_SUCCESS {
 
+			//生成token
 			h.Write([]byte(username + time.Now().Format("2006-01-02 15:04:05")))
 			token = hex.EncodeToString(h.Sum(nil))
 
-			err := redis.Set(token, login.Type+c.ClientIP(), int(time.Second*30))
+			//缓存数据    身份|-|登陆ip|-|用户id
+			cacheData := login.Type + "|-|" + c.ClientIP() + "|-|" + user_real_name
+			err := redis.Set(token, cacheData, int(time.Second*30))
 			if err != nil {
 				fmt.Print(err.Error())
 				codes = code.SERVER_ERROR
 			}
-			fmt.Println("token", token)
 
-			data, _ := redis.Get(token)
-			fmt.Print(data)
-			//fmt.Println(data[1:4])
 		}
 		fmt.Println(codes)
 		res := map[string]interface{}{

@@ -1,14 +1,14 @@
 package router
 
 import (
+	"byxt/admin/controllers"
+	admins "byxt/admin/controllers/admin"
+	users "byxt/admin/controllers/user"
 	"byxt/admin/pem"
 	code2 "byxt/admin/pkg/code"
 	"byxt/admin/pkg/cors"
 	"byxt/admin/pkg/middleware/jwt"
 	"byxt/admin/pkg/setting"
-	"byxt/admin/src/controllers"
-	admins "byxt/admin/src/controllers/admin"
-	users "byxt/admin/src/controllers/user"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -44,6 +44,7 @@ func InitRouter() *gin.Engine {
 		admin.POST("/setStuEntry", admins.SetStuEnterStatus)
 		//更新系统秘钥
 		admin.GET("/updateSecretKey", updateSecretKey)
+		admin.POST("/updatePwd", controllers.UpdatePwd)
 	}
 
 	stu := r.Group("api/stu")

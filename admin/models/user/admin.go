@@ -33,3 +33,31 @@ func Login(user, pwd string) int {
 	}
 	return code.USER_LOGIN_SUCCESS
 }
+//修改密码
+func AdminUpdatePwd(userId, oldPwd, newPwd string) int {
+	var useradmin UserAdmin
+	codes := code.SUCCESS
+
+	err := mysql.Db.Select("password").Where("user_id = ? ", userId).First(&useradmin)
+
+	//出错或用户不存在，均处理为用户不存在
+	if err != nil {
+		mlog.Info(err.Error)
+		codes = code.USER_USER_NOT_EXIST
+		return codes
+	}
+
+	//判断旧密码是否相等
+	if useradmin.Password == oldPwd {
+		err = mysql.Db.Model(&useradmin).Where("user_id = ?", userId).Update("password", newPwd)
+		if err != nil {
+			codes = code.ERROR
+		}
+		//修改成功
+		codes = code.SUCCESS
+	} else {
+		codes = code.PASSWORD_NOT_EQUALS
+	}
+
+	return codes
+}

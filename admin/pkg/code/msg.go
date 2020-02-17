@@ -21,6 +21,8 @@ var msgFlags = map[int]string{
 	TOKEN_ERROR:				"身份信息错误",
 	TOKEN_TIME_OUT:				"身份信息超时",
 	TOKEN_PERMISSION_DENY: 		"请勿越权访问",
+
+	PASSWORD_NOT_EQUALS:		"新旧密码不相等",
 }
 
 func GetMsg(code int) string {

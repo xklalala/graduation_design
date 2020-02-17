@@ -2,9 +2,9 @@ package admin
 
 import (
 	"byxt/admin/inits/redis"
+	"byxt/admin/models/admin"
 	"byxt/admin/pkg/code"
 	"byxt/admin/router/request_struct"
-	"byxt/admin/src/models/admin"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"

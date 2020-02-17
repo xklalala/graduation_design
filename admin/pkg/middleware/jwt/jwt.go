@@ -5,6 +5,7 @@ import (
 	mcode "byxt/admin/pkg/code"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strings"
 )
 
 func JWT(auth string) gin.HandlerFunc {
@@ -17,17 +18,18 @@ func JWT(auth string) gin.HandlerFunc {
 		if token == "" {
 			codes = mcode.TOKEN_ERROR
 		}
-		data, err := redis.Get(token)
+
+		data, err := GetUserRedisInfo(token)
 		//缓存token失效或不存在
 		if err != nil {
 			codes = mcode.TOKEN_ERROR
 		} else {
 			//token身份错误
-			if data[1:4] != auth {
+			if data[0] != auth {
 				codes = mcode.TOKEN_PERMISSION_DENY
 			}
 			//ip错误
-			if data[4:len(data)-1] != c.ClientIP() {
+			if data[1] != c.ClientIP() {
 				codes = mcode.TOKEN_PERMISSION_DENY
 			}
 		}
@@ -39,4 +41,15 @@ func JWT(auth string) gin.HandlerFunc {
 		}
 		c.Next()
 	}
+}
+
+//获取用户缓存信息 身份，ip，账号
+func GetUserRedisInfo(token string) ([]string, error) {
+	info, err := redis.Get(token)
+	if err != nil {
+		return []string{"", "", ""}, err
+	}
+	//去掉引号
+	info = info[1:len(info)-1]
+	return strings.Split(info, "|-|"), nil
 }
