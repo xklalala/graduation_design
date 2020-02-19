@@ -20,7 +20,7 @@ const (
 	TOKEN_TIME_OUT			= 30002		//身份信息超时
 	TOKEN_PERMISSION_DENY   = 30003		//权限不足
 
-	PASSWORD_NOT_EQUALS		= 40001		//新旧密码不相等
+	PASSWORD_NOT_EQUALS		= 40001		//原密码错误
 
 
 )

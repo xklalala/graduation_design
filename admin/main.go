@@ -12,8 +12,7 @@ import (
 )
 
 func main() {
-
-	return
+	//c9268cca058eede53b7728ebd602efb8
 	err := redis.Setup()
 	if err != nil {
 		fmt.Println(err, err.Error())

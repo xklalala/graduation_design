@@ -12,6 +12,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -71,8 +72,8 @@ func Login(c *gin.Context) {
 			h.Write([]byte(username + time.Now().Format("2006-01-02 15:04:05")))
 			token = hex.EncodeToString(h.Sum(nil))
 
-			//缓存数据    身份|-|登陆ip|-|用户id
-			cacheData := login.Type + "|-|" + c.ClientIP() + "|-|" + user_real_name
+			//缓存数据    身份|-|登陆ip|-|用户id|-|10位时间戳
+			cacheData := login.Type + "|-|" + c.ClientIP() + "|-|" + user_real_name + "|-|" + strconv.FormatInt(time.Now().Unix(), 10)
 			err := redis.Set(token, cacheData, int(time.Second*30))
 			if err != nil {
 				fmt.Print(err.Error())

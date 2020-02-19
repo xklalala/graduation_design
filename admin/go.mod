@@ -3,6 +3,7 @@ module byxt/admin
 go 1.13
 
 require (
+	github.com/360EntSecGroup-Skylar/excelize v1.4.1 // indirect
 	github.com/gin-gonic/gin v1.5.0
 	github.com/go-ini/ini v1.52.0
 	github.com/go-playground/universal-translator v0.17.0 // indirect

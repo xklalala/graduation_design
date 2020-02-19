@@ -17,3 +17,4 @@ type UpdatePassword struct {
 	OldPwd string `form:"old_pwd" binding:"required"`
 	NewPwd string `form:"new_pwd" binding:"required"`
 }
+

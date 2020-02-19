@@ -11,8 +11,25 @@ export default [
     },
     {
         title:'用户管理',
-        key:  '/admin/adminuser',
         icon: 'user',
+        key: '/admin/usermanage',
+        children: [
+            {
+                title: '管理员账号',
+                key: '/admin/user/adminuser',
+                icon: 'user',
+            },
+            {
+                title: '教师账号',
+                key: '/admin/user/teauser',
+                icon: 'user',
+            },
+            {
+                title: '学生账号',
+                key: '/admin/user/stuuser',
+                icon: 'user',
+            }
+        ]
     },
     {
         title:'个人信息设置',

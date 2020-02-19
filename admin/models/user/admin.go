@@ -4,6 +4,7 @@ import (
 	"byxt/admin/inits/mysql"
 	"byxt/admin/pkg/code"
 	"byxt/admin/pkg/mlog"
+	"fmt"
 )
 
 type UserAdmin struct {
@@ -35,18 +36,21 @@ func Login(user, pwd string) int {
 }
 //修改密码
 func AdminUpdatePwd(userId, oldPwd, newPwd string) int {
+
 	var useradmin UserAdmin
 	codes := code.SUCCESS
 
 	err := mysql.Db.Select("password").Where("user_id = ? ", userId).First(&useradmin)
 
 	//出错或用户不存在，均处理为用户不存在
-	if err != nil {
+	if err.Error != nil {
 		mlog.Info(err.Error)
 		codes = code.USER_USER_NOT_EXIST
 		return codes
 	}
 
+	fmt.Println("old pwd "+useradmin.Password)
+	fmt.Println("new pwd "+oldPwd)
 	//判断旧密码是否相等
 	if useradmin.Password == oldPwd {
 		err = mysql.Db.Model(&useradmin).Where("user_id = ?", userId).Update("password", newPwd)

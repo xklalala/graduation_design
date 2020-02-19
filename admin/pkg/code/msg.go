@@ -18,11 +18,11 @@ var msgFlags = map[int]string{
 	SYSTEM_CLOSE:				"对不起，系统已经关闭, 无法进入系统",
 	REQUEST_PARMS_ERROR:		"请求参数错误",
 
-	TOKEN_ERROR:				"身份信息错误",
-	TOKEN_TIME_OUT:				"身份信息超时",
+	TOKEN_ERROR:				"身份信息错误，请重新登录",
+	TOKEN_TIME_OUT:				"身份信息超时， 请重新登录",
 	TOKEN_PERMISSION_DENY: 		"请勿越权访问",
 
-	PASSWORD_NOT_EQUALS:		"新旧密码不相等",
+	PASSWORD_NOT_EQUALS:		"原密码错误",
 }
 
 func GetMsg(code int) string {

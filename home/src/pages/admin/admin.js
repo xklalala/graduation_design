@@ -13,7 +13,7 @@ class Admin extends React.Component {
   state = {
     collapsed: false,
   };
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
 	  const menuTreeNode = this.renderMenu(MenuList)
 	  this.setState({
 		  menuTreeNode

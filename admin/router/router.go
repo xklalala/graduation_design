@@ -9,6 +9,7 @@ import (
 	"byxt/admin/pkg/cors"
 	"byxt/admin/pkg/middleware/jwt"
 	"byxt/admin/pkg/setting"
+	"byxt/admin/pkg/upfile"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -21,7 +22,7 @@ func InitRouter() *gin.Engine {
 	gin.SetMode(setting.RUN_MODE)
 
 	r.GET("api/getPublicSecret", controllers.GetPublicPem)
-
+	r.POST("/api/upload", upfile.UpLoadFile)
 	user := r.Group("api/user:type")
 	{
 		//登录
@@ -44,6 +45,7 @@ func InitRouter() *gin.Engine {
 		admin.POST("/setStuEntry", admins.SetStuEnterStatus)
 		//更新系统秘钥
 		admin.GET("/updateSecretKey", updateSecretKey)
+		//管理员修改密码
 		admin.POST("/updatePwd", controllers.UpdatePwd)
 	}
 

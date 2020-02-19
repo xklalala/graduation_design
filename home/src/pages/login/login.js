@@ -50,6 +50,7 @@ class Login extends React.Component {
                     if (response.data.code === 10005) {
                         //公钥获取成功
                         publicSecritKey = response.data.data
+                        localStorage.setItem("publicSecritKey", publicSecritKey)
                         let encrypt = new JSEncrypt()
                         encrypt.setPublicKey(publicSecritKey);
 
@@ -73,6 +74,7 @@ class Login extends React.Component {
                                 localStorage.setItem("token", response.data.data.token)
                                 localStorage.setItem("name", response.data.data.username)
                                 localStorage.setItem("sf", values.loginType)
+                                Axios.defaults.headers.common["token"] = localStorage.getItem("token");
                                 self.props.history.push("/admin")
                                 
                             } else {
@@ -136,7 +138,7 @@ class Login extends React.Component {
                                     <Form.Item>
                                         {getFieldDecorator('password', {
                                             rules: [
-                                                { required: true, message: '请输入账号' },
+                                                { required: true, message: '请输入密码' },
                                                 { min: 8,   message: "密码最小长度为8位"},
                                             ],
                                         })(

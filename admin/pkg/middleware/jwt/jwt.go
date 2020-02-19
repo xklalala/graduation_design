@@ -3,9 +3,12 @@ package jwt
 import (
 	"byxt/admin/inits/redis"
 	mcode "byxt/admin/pkg/code"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 	"strings"
+	"time"
 )
 
 func JWT(auth string) gin.HandlerFunc {
@@ -39,14 +42,24 @@ func JWT(auth string) gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+
+		//最后5分钟有操作，重新缓存token
+		times,_ := strconv.ParseInt(data[4], 10, 64)
+		if time.Now().Unix() - times > 25*60 {
+			//缓存数据    身份|-|登陆ip|-|用户id|-|10位时间戳
+			cacheData := data[0] + "|-|" + data[1] + "|-|" + data[2] + "|-|" + strconv.FormatInt(time.Now().Unix(), 10)
+			redis.Set(token, cacheData, int(time.Second*30))
+		}
 		c.Next()
 	}
 }
 
-//获取用户缓存信息 身份，ip，账号
+//获取用户缓存信息 身份，ip，账号, 时间
 func GetUserRedisInfo(token string) ([]string, error) {
 	info, err := redis.Get(token)
+	fmt.Println(info)
 	if err != nil {
+		fmt.Println(err.Error())
 		return []string{"", "", ""}, err
 	}
 	//去掉引号

@@ -41,13 +41,13 @@ func UpdatePwd(c *gin.Context) {
 			return
 		}
 		//解密获得真实密码
-		oldpwd, _ := pem.RsaDecrypt(userInfo.OldPwd)
+		oldpwd, err := pem.RsaDecrypt(userInfo.OldPwd)
 		newpwd, _ := pem.RsaDecrypt(userInfo.NewPwd)
-
 		//加密
 		h := md5.New()
 		h.Write([]byte(oldpwd + setting.MD5SECRET))
 		oldpwd = hex.EncodeToString(h.Sum(nil))
+		h = md5.New()
 		h.Write([]byte(newpwd + setting.MD5SECRET))
 		newpwd = hex.EncodeToString(h.Sum(nil))
 

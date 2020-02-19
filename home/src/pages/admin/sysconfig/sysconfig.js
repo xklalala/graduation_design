@@ -57,8 +57,8 @@ class SysConfig extends React.Component {
     setSysEntrySuccess = () => {
         message.success("设置成功")
     }
-    setSysEntryError = () => {
-        message.error("系统发生错误")
+    setSysEntryError = (msg) => {
+        message.error(msg)
     }
     authError = (msg) => {
         message.error(msg)
@@ -104,7 +104,7 @@ class SysConfig extends React.Component {
             if (response.data.code === 10001) {
                 self.setSysEntrySuccess()
             } else {
-                self.setSysEntryError()
+                self.setSysEntryError(response.data.message)
             }
         })
         .catch(function (error) {
@@ -126,7 +126,7 @@ class SysConfig extends React.Component {
            if (response.data.code === 10001) {
                self.setSysEntrySuccess()
            } else {
-               self.setSysEntryError()
+               self.setSysEntryError(response.data.message)
            }
            
         })
