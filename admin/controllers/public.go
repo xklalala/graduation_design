@@ -13,6 +13,12 @@ import (
 	"net/http"
 )
 
+func GetTeacherList(c *gin.Context) {
+	code.R(http.StatusOK, 200, user.AdminGetAllTeachrs(), c)
+
+
+}
+
 //获得公钥
 func GetPublicPem(c *gin.Context) {
 	public, err := pem.GetPublic()

@@ -13,7 +13,6 @@ class SysConfig extends React.Component {
             teaStatus:false,
             stuStatus:false,
         }
-    
     }
 
     render() {
@@ -67,6 +66,7 @@ class SysConfig extends React.Component {
         let teaStatus
         let stuStatus
         let _this = this
+        Axios.defaults.headers.common["token"] = localStorage.getItem("token");
         Axios.get(
             MConfig.request_url + '/admin/getTeaAndStuStatus', 
         )

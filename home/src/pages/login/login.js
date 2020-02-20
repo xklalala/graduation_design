@@ -4,9 +4,10 @@ import 'antd/dist/antd.css';
 import './login.less'
 import MConfig from '../config'
 import getFormdata from '../public/js/getFormData'
+import Axios from 'axios'
 import JSEncrypt from 'jsencrypt'
 import { Form, Input, Icon, Checkbox, Button, Col, Row, Radio, message } from 'antd';
-import Axios from 'axios'
+
 
 const options = [
     { label: '学生', value: 'stu' },

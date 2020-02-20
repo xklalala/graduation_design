@@ -21,6 +21,7 @@ func InitRouter() *gin.Engine {
 
 	gin.SetMode(setting.RUN_MODE)
 
+	r.GET("/api/teacherlist", controllers.GetTeacherList)
 	r.GET("api/getPublicSecret", controllers.GetPublicPem)
 	r.POST("/api/upload", upfile.UpLoadFile)
 	user := r.Group("api/user:type")

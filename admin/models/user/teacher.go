@@ -4,9 +4,11 @@ import (
 	"byxt/admin/inits/mysql"
 	"byxt/admin/pkg/code"
 	"byxt/admin/pkg/mlog"
+	"fmt"
 )
 
 type UserTeacher struct {
+	Id				string `json:"id"`
 	TeacherId       string `json:"teacher_id"`
 	TeacherName     string `json:"teacher_name"`
 	TeacherPassword string `json:"teacher_password"`
@@ -55,4 +57,18 @@ func TeainUpdatePwd(userId, oldPwd, newPwd string) int {
 		codes = code.PASSWORD_NOT_EQUALS
 	}
 	return codes
+}
+
+//获取所有教师信息
+func AdminGetAllTeachrs() []UserTeacher{
+	var teacher []UserTeacher
+	err := mysql.Db.Select("id, teacher_id, teacher_name, phone_number, another_contact, teacher_status").Where("id > 0").Find(&teacher)
+	if err != nil {
+		fmt.Println(err.Error)
+	}
+	for _, v := range teacher {
+		fmt.Println(v)
+	}
+	return teacher
+
 }

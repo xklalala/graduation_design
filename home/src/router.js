@@ -10,7 +10,7 @@ import AdminUser from './pages/admin/user/admin'
 import Exit from './pages/public/js/exit'
 import EditUserInfo from './pages/admin/editUserInfo/index';
 import AdminAccount from './pages/admin/account/admin'
-import TeacherAccount from './pages/admin/account/teacher'
+import TeacherAccount from './pages/admin/account/teacher/teacher'
 import StudentAccount from './pages/admin/account/student'
 
 
