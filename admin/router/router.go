@@ -48,6 +48,14 @@ func InitRouter() *gin.Engine {
 		admin.GET("/updateSecretKey", updateSecretKey)
 		//管理员修改密码
 		admin.POST("/updatePwd", controllers.UpdatePwd)
+		//新增教师账号
+		admin.POST("/addTeacher", admins.Admin_AddTeacher)
+		//修改教师账号
+		admin.POST("/editTeacher", admins.Admin_UpdateTeacher)
+		//删除账号
+		admin.GET("/delete/:id", admins.Admin_DeleteTeacher)
+		//设置教师状态
+		admin.POST("/setStatus", admins.SetTeacherStatus)
 	}
 
 	stu := r.Group("api/stu")

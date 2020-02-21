@@ -11,10 +11,22 @@ type Login struct {
 type SetEnterStatus struct {
 	Status string `form:"status" binding:"required"`
 }
-
+//设置账号状态
+type UserStatus struct {
+	Id string `form:"id" binding:"required"`
+	Status string `form:"status" binding:"required"`
+}
 //修改密码
 type UpdatePassword struct {
 	OldPwd string `form:"old_pwd" binding:"required"`
 	NewPwd string `form:"new_pwd" binding:"required"`
 }
 
+//新增教师, 修改教师信息
+type Admin_AddTeacher struct {
+	ID				int	   `form:"id"`
+	TeacherName 	string `form:"teacher_name" binding:"required"`
+	TeacherID 		string `form:"teacher_id" binding:"required"`
+	Phone			string `form:"phone"`
+	AnotherContact 	string `form:"another_contact"`
+}

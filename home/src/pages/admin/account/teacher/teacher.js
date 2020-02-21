@@ -1,8 +1,17 @@
 import React from 'react'
 import {Form, Icon, Upload, Button, Row, Col, message, Input, Modal} from 'antd'
 import TeacherList from './teacherTable'
-
+import getFormdata from '../../../public/js/getFormData'
+import JSEncrypt from 'jsencrypt'
+import MConfig from '../../../config'
+import Axios from 'axios'
 class TeacherAccount extends React.Component {
+	sys_success = (msg) => {
+		message.success(msg)
+	}
+	sys_error = (msg) => {
+		message.error(msg)
+	}
 	state = {
         loading: false,
         visible: false,
@@ -12,19 +21,37 @@ class TeacherAccount extends React.Component {
         this.props.form.validateFields((err, values) => {
             console.log(values)
             if (!err) {
-                // Axios.defaults.headers.common["token"] = localStorage.getItem("token");
-                // Axios.post(
-                //     MConfig.request_url + '/admin/updatePwd', 
-                // )
-                // .then(function (response) {
+				let _this = this
+				let publicSecritKey = localStorage.getItem("publicSecritKey")
+                let encrypt = new JSEncrypt()
+                encrypt.setPublicKey(publicSecritKey);
 
-                // })
-                // .catch(function (error) {
-                //     console.log(error);
-                // })
+                let teacher_id = encrypt.encrypt(values.teacher_id)
+				
+				let data = getFormdata({
+					teacher_name: 	values.name,
+					teacher_id: 	teacher_id,
+					phone:     		typeof(values.phone) === undefined?values.phone:"",
+					another_contact:typeof(values.another_contact)  === undefined?values.another_contact:""
+				})
+                Axios.defaults.headers.common["token"] = localStorage.getItem("token");
+                Axios.post(
+					MConfig.request_url + '/admin/addTeacher', 
+					data
+                )
+                .then(function (response) {
+					if (response.data.code === 10001) {
+						_this.sys_success("添加成功")
+					} else {
+						_this.sys_error("请检查教号是否重复")
+					}
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
                 this.setState({ visible: false })
             } else {
-                
+                this.sys_error("输入有误，请检查")
             }
         });
 	};

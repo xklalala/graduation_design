@@ -59,5 +59,4 @@ func GetSutTeaStatus(c *gin.Context) {
 	}
 	codes = code.SUCCESS
 	code.R(http.StatusOK, codes, data, c)
-
 }

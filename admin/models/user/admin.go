@@ -62,6 +62,5 @@ func AdminUpdatePwd(userId, oldPwd, newPwd string) int {
 	} else {
 		codes = code.PASSWORD_NOT_EQUALS
 	}
-
 	return codes
 }

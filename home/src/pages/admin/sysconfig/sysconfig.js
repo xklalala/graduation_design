@@ -71,11 +71,6 @@ class SysConfig extends React.Component {
             MConfig.request_url + '/admin/getTeaAndStuStatus', 
         )
         .then(function (response){
-            if (response.data.code % 1000 === 3) {
-                _this.authError(response.data.message)
-                return
-            }
-            
             if (response.data.code === 10001) {
                 teaStatus = response.data.data.TEACHER_ENTRY==="true"?true:false
                 stuStatus = response.data.data.STUDENT_ENTRY==="true"?true:false
@@ -83,6 +78,10 @@ class SysConfig extends React.Component {
                     teaStatus:teaStatus,
                     stuStatus:stuStatus,
                 })
+            } else {
+                _this.authError(response.data.message)
+                localStorage.clear()
+                return
             }
         })
         .catch(function (error) {

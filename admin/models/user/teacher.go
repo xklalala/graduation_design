@@ -2,8 +2,10 @@ package user
 
 import (
 	"byxt/admin/inits/mysql"
+	"byxt/admin/pem"
 	"byxt/admin/pkg/code"
 	"byxt/admin/pkg/mlog"
+	"byxt/admin/router/request_struct"
 	"fmt"
 )
 
@@ -66,9 +68,57 @@ func AdminGetAllTeachrs() []UserTeacher{
 	if err != nil {
 		fmt.Println(err.Error)
 	}
-	for _, v := range teacher {
-		fmt.Println(v)
-	}
-	return teacher
 
+	return teacher
+}
+//添加教师
+func AdminAddTeacherModel(teacher request_struct.Admin_AddTeacher) int {
+	status := code.SUCCESS
+	teacher_id, _ := pem.RsaDecrypt(teacher.TeacherID)
+	addTeacher := UserTeacher{
+		TeacherId:       teacher_id,
+		TeacherName:     teacher.TeacherName,
+		TeacherPassword: "c9268cca058eede53b7728ebd602efb8",
+		PhoneNumber:     teacher.Phone,
+		AnotherContact:  teacher.AnotherContact,
+		TeacherStatus:   "1",
+	}
+	if err := mysql.Db.Create(&addTeacher); err.Error != nil {
+		status = code.ERROR
+	}
+	return status
+}
+//更新教师
+func EditTeacher(teacher request_struct.Admin_AddTeacher) int {
+	var teachers UserTeacher
+	teacher_id, _ := pem.RsaDecrypt(teacher.TeacherID)
+	addTeacher := map[string]interface{}{
+		"TeacherName":		teacher.TeacherName,
+		"TeacherId":		teacher_id,
+		"PhoneNumber":  	teacher.Phone,
+		"AnotherContact":  	teacher.AnotherContact,
+	}
+	if err := mysql.Db.Model(&teachers).Where("id = ?", teacher.ID).Update(addTeacher); err.Error != nil {
+		fmt.Println(err.Error)
+		return code.ERROR
+	}
+	return code.SUCCESS
+}
+
+//删除
+func DeleteTeacher(id int) int {
+	if err := mysql.Db.Where("id = ?", id).Delete(UserTeacher{}); err.Error != nil {
+		return code.ERROR
+	}
+	return code.SUCCESS
+}
+
+//修改状态
+func SetStatus(id, status string) int {
+	var teachers UserTeacher
+	if err := mysql.Db.Model(teachers).Where("id = ?", id).Update("teacher_status", status); err.Error != nil {
+		fmt.Println(err.Error)
+		return code.ERROR
+	}
+	return code.SUCCESS
 }
