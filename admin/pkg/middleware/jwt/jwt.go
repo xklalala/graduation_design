@@ -27,14 +27,16 @@ func JWT(auth string) gin.HandlerFunc {
 		if err != nil {
 			codes = mcode.TOKEN_ERROR
 		} else {
+			//fmt.Println("data[0]: "+data[0], "auth: "+ auth)
 			//token身份错误
 			if data[0] != auth {
 				codes = mcode.TOKEN_PERMISSION_DENY
 			}
+			//fmt.Println("data[0]: "+data[1], "auth: "+ c.ClientIP())
 			//ip错误
-			if data[1] != c.ClientIP() {
-				codes = mcode.TOKEN_PERMISSION_DENY
-			}
+			//if data[1] != c.ClientIP() {
+			//	codes = mcode.TOKEN_PERMISSION_DENY
+			//}
 		}
 
 		if codes != mcode.SUCCESS {

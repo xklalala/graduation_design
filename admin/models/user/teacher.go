@@ -122,3 +122,14 @@ func SetStatus(id, status string) int {
 	}
 	return code.SUCCESS
 }
+
+//批量导入教师
+func TeacherMultipleAddModel(sql string) int {
+	err := mysql.Db.Exec(sql)
+	if err.Error != nil {
+		fmt.Println(err)
+		return code.ERROR
+	}
+	return code.SUCCESS
+
+}

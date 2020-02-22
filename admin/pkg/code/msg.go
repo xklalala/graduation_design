@@ -23,6 +23,9 @@ var msgFlags = map[int]string{
 	TOKEN_PERMISSION_DENY: 		"请勿越权访问",
 
 	PASSWORD_NOT_EQUALS:		"原密码错误",
+	UPFILE_ERROR:				"上传文件出错",
+	UPFILE_FILE_TYPE_ERROR:		"文件类型错误",
+	UPFILE_FILE_SIZE_BIG:		"文件太大",
 }
 
 func GetMsg(code int) string {

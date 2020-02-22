@@ -4,16 +4,12 @@ import (
 	"byxt/admin/controllers"
 	admins "byxt/admin/controllers/admin"
 	users "byxt/admin/controllers/user"
-	"byxt/admin/pem"
-	code2 "byxt/admin/pkg/code"
 	"byxt/admin/pkg/cors"
 	"byxt/admin/pkg/middleware/jwt"
 	"byxt/admin/pkg/setting"
-	"byxt/admin/pkg/upfile"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
-
+//config set stop-writes-on-bgsave-error no
 func InitRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(cors.Cors())
@@ -21,9 +17,11 @@ func InitRouter() *gin.Engine {
 
 	gin.SetMode(setting.RUN_MODE)
 
-	r.GET("/api/teacherlist", controllers.GetTeacherList)
-	r.GET("api/getPublicSecret", controllers.GetPublicPem)
-	r.POST("/api/upload", upfile.UpLoadFile)
+	r.StaticFile("/api/teacherExample.xlsx", "./static/download/教师上传示例.xlsx")
+//获取公钥
+r.GET("/api/getPublicSecret", controllers.GetPublicPem)
+
+
 	user := r.Group("api/user:type")
 	{
 		//登录
@@ -35,9 +33,7 @@ func InitRouter() *gin.Engine {
 
 	admin := r.Group("api/admin")
 	admin.Use(jwt.JWT("adm"))
-	{	//获取前台路由列表
-		admin.GET("/getRoutesList", )
-		admin.POST("/setTeaEntryStatus")
+	{
 		//获取教师和学生的系统状态
 		admin.GET("/getTeaAndStuStatus", admins.GetSutTeaStatus)
 		//设置教师系统状态
@@ -45,17 +41,22 @@ func InitRouter() *gin.Engine {
 		//设置学生系统状态
 		admin.POST("/setStuEntry", admins.SetStuEnterStatus)
 		//更新系统秘钥
-		admin.GET("/updateSecretKey", updateSecretKey)
+		admin.GET("/updateSecretKey", admins.UpdateSecretKey)
 		//管理员修改密码
 		admin.POST("/updatePwd", controllers.UpdatePwd)
 		//新增教师账号
 		admin.POST("/addTeacher", admins.Admin_AddTeacher)
+		//获取教师列表
+		admin.GET("/teacherlist", controllers.GetTeacherList)
 		//修改教师账号
 		admin.POST("/editTeacher", admins.Admin_UpdateTeacher)
 		//删除账号
 		admin.GET("/delete/:id", admins.Admin_DeleteTeacher)
 		//设置教师状态
 		admin.POST("/setStatus", admins.SetTeacherStatus)
+		//批量导入教师账号
+		admin.POST("/upload", admins.TeacherMultipleAdd)
+
 	}
 
 	stu := r.Group("api/stu")
@@ -68,16 +69,4 @@ func InitRouter() *gin.Engine {
 		tea.GET("getRoutesList")
 	}
 	return r
-}
-
-
-//更新秘钥
-func updateSecretKey(c *gin.Context) {
-	var code int
-	if err := pem.GenRsaKey(1024); err != nil {
-		code = code2.ERROR
-	} else {
-		code = code2.SUCCESS
-	}
-	code2.R(http.StatusOK, code, "", c)
 }

@@ -27,7 +27,7 @@ class TeacherList extends React.Component {
         let self = this
         Axios.defaults.headers.common["token"] = localStorage.getItem("token");
         Axios.get(
-            MConfig.request_url + '/teacherlist', 
+            MConfig.request_url + '/admin/teacherlist', 
         )
         .then(function (response) {
             if (response.data.code === 200) {

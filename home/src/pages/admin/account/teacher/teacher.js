@@ -126,23 +126,37 @@ class TeacherAccount extends React.Component {
 	handleCancel = () => {
 		this.setState({ visible: false });
 	};
+	download = () => {
+		Axios.defaults.headers.common["token"] = localStorage.getItem("token");
+        Axios.get(
+            MConfig.request_url + '/admin/teacherExample.xlsx', 
+		)
+		.then(function (response){
+			console.log(response)
+		})
+		.finally(function(err){
+			console.log(err)
+		})
+	}
     render() {
+		const _this = this
         const props = {
 			name: 'filename',
-			action: 'http://127.0.0.1:8080/api/upload',
+			action: 'http://127.0.0.1:8080/api/admin/upload',
 			headers: {
 			  token: localStorage.getItem("token"),
 			},
 			showUploadList:false,
 			onChange(info) {
-			  if (info.file.status !== 'uploading') {
-				console.log(info.file, info.fileList);
-			  }
-			  if (info.file.status === 'done') {
-				message.success(`${info.file.name} file uploaded successfully`);
-			  } else if (info.file.status === 'error') {
-				message.error(`${info.file.name} file upload failed.`);
-			  }
+				console.log(info.file.response)
+				if(typeof(info.file.response) != "undefined") {
+					console.log(info.file.response)
+					if (info.file.response.code === 10001) {
+						_this.sys_success("添加成功, 请刷新页面");
+					}else {
+						_this.sys_error("批量添加失败，请检查教号是否重复")
+					}
+				}
 			},
 		};
 		
@@ -159,7 +173,7 @@ class TeacherAccount extends React.Component {
                 </Modal>
 				<Row>
 					
-					<Col span={4}><Button icon="download">点击此处下载模板</Button></Col>
+					<Col span={4}><a href={MConfig.request_url + '/teacherExample.xlsx'}><Button icon="download">点击此处下载模板</Button></a></Col>
 					<Col span={4}>
 						<Upload {...props}>
 							<Button> <Icon type="upload" /> 批量导入账号 </Button>

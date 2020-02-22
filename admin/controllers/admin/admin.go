@@ -2,8 +2,12 @@ package admin
 
 import (
 	"byxt/admin/models/user"
+	"byxt/admin/pem"
 	"byxt/admin/pkg/code"
+	"byxt/admin/pkg/upfile"
+	"byxt/admin/pkg/util"
 	"byxt/admin/router/request_struct"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -49,4 +53,35 @@ func SetTeacherStatus(c *gin.Context) {
 		status = user.SetStatus(parms.Id, parms.Status)
 	}
 	code.R(http.StatusOK, status, "", c)
+}
+
+//更新秘钥
+func UpdateSecretKey(c *gin.Context) {
+	var codes int
+	if err := pem.GenRsaKey(1024); err != nil {
+		codes = code.ERROR
+	} else {
+		codes = code.SUCCESS
+	}
+	code.R(http.StatusOK, codes, "", c)
+}
+
+//批量添加教师账号
+func TeacherMultipleAdd(c *gin.Context) {
+	//获取文件名以及文件读取状态
+	filename, err, codes := upfile.Upfile(c)
+	if err != nil {
+		//上传文件出错
+		code.R(http.StatusOK, codes, "", c)
+		return
+
+	} else {
+		//获取sql语句
+		sql, err := util.ExcelGetSql([]string{"teacher_name", "teacher_id"}, "xtxt_user_teacher", filename)
+		if err != nil {
+			fmt.Println(err)
+		}
+		codes = user.TeacherMultipleAddModel(sql)
+	}
+	code.R(http.StatusOK, codes, "", c)
 }

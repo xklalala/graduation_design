@@ -22,5 +22,8 @@ const (
 
 	PASSWORD_NOT_EQUALS		= 40001		//原密码错误
 
+	UPFILE_ERROR			= 50001		//上传文件出错
+	UPFILE_FILE_TYPE_ERROR  = 50002		//文件类型错误
+	UPFILE_FILE_SIZE_BIG	= 50003		//文件太大
 
 )
