@@ -172,12 +172,9 @@ class TeacherAccount extends React.Component {
                     {this.add_teacher()}
                 </Modal>
 				<Row>
-					
 					<Col span={4}><a href={MConfig.request_url + '/teacherExample.xlsx'}><Button icon="download">点击此处下载模板</Button></a></Col>
 					<Col span={4}>
-						<Upload {...props}>
-							<Button> <Icon type="upload" /> 批量导入账号 </Button>
-						</Upload>
+						<Upload {...props}><Button> <Icon type="upload" /> 批量导入账号 </Button></Upload>
 					</Col>
 					<Col span={4}>
 					<Button 

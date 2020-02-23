@@ -11,7 +11,7 @@ import Exit from './pages/public/js/exit'
 import EditUserInfo from './pages/admin/editUserInfo/index';
 import AdminAccount from './pages/admin/account/admin'
 import TeacherAccount from './pages/admin/account/teacher/teacher'
-import StudentAccount from './pages/admin/account/student'
+import StudentAccount from './pages/admin/account/student/student'
 
 
 class MyRouter extends React.Component {

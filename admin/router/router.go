@@ -44,6 +44,7 @@ r.GET("/api/getPublicSecret", controllers.GetPublicPem)
 		admin.GET("/updateSecretKey", admins.UpdateSecretKey)
 		//管理员修改密码
 		admin.POST("/updatePwd", controllers.UpdatePwd)
+
 		//新增教师账号
 		admin.POST("/addTeacher", admins.Admin_AddTeacher)
 		//获取教师列表
@@ -56,6 +57,22 @@ r.GET("/api/getPublicSecret", controllers.GetPublicPem)
 		admin.POST("/setStatus", admins.SetTeacherStatus)
 		//批量导入教师账号
 		admin.POST("/upload", admins.TeacherMultipleAdd)
+
+		//获取学生年份列表
+		admin.GET("/getStuYearList", admins.Admin_StuYearList)
+		//添加学生年份
+		admin.GET("/addStuYear/:year", admins.Admin_AddStudentYear)
+		//获取学生列表（根据年份）
+		admin.GET("/getStuList/:year", admins.Admin_StuGetStuList)
+		//新增学生账号
+		admin.POST("/addStudent", admins.Admin_AddStu)
+		//批量导入学生账号
+		admin.POST("/multipleAddStu", admins.Admin_MultipleAddStu)
+		//修改学生信息
+		admin.POST("/updateStu", admins.Admin_UpdateStu)
+		//设置学生账号状态
+		admin.POST("/stuSetStatus/:year", admins.Admin_SetStuStatus)
+
 
 	}
 

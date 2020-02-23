@@ -1,11 +1,12 @@
 import React from 'react'
-class StudentAccount extends React.Component {
+class StudentList extends React.Component {
     render() {
         return (
             <div>
-                StudentAccount
+                studentlist
             </div>
         )
     }
 }
-export default StudentAccount
+
+export default StudentList

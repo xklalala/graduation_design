@@ -131,5 +131,4 @@ func TeacherMultipleAddModel(sql string) int {
 		return code.ERROR
 	}
 	return code.SUCCESS
-
 }
