@@ -18,6 +18,7 @@ func InitRouter() *gin.Engine {
 	gin.SetMode(setting.RUN_MODE)
 
 	r.StaticFile("/api/teacherExample.xlsx", "./static/download/教师上传示例.xlsx")
+	r.StaticFile("/api/studentExample.xlsx", "./static/download/学生上传示例.xlsx")
 //获取公钥
 r.GET("/api/getPublicSecret", controllers.GetPublicPem)
 
@@ -61,17 +62,19 @@ r.GET("/api/getPublicSecret", controllers.GetPublicPem)
 		//获取学生年份列表
 		admin.GET("/getStuYearList", admins.Admin_StuYearList)
 		//添加学生年份
-		admin.GET("/addStuYear/:year", admins.Admin_AddStudentYear)
+		admin.PUT("/addStuYear/:year", admins.Admin_AddStudentYear)
 		//获取学生列表（根据年份）
 		admin.GET("/getStuList/:year", admins.Admin_StuGetStuList)
 		//新增学生账号
 		admin.POST("/addStudent", admins.Admin_AddStu)
 		//批量导入学生账号
-		admin.POST("/multipleAddStu", admins.Admin_MultipleAddStu)
+		admin.POST("/multipleAddStu/:year", admins.Admin_MultipleAddStu)
 		//修改学生信息
 		admin.POST("/updateStu", admins.Admin_UpdateStu)
 		//设置学生账号状态
-		admin.POST("/stuSetStatus/:year", admins.Admin_SetStuStatus)
+		admin.DELETE("/studentDelete/:id/:year", admins.DeleteStudent)
+		//设置年份学生状态
+		admin.POST("/stuSetStatus", admins.SetStudentYearStatus)
 
 
 	}

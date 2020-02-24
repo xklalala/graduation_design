@@ -12,6 +12,7 @@ import EditUserInfo from './pages/admin/editUserInfo/index';
 import AdminAccount from './pages/admin/account/admin'
 import TeacherAccount from './pages/admin/account/teacher/teacher'
 import StudentAccount from './pages/admin/account/student/student'
+import StudentList from './pages/admin/account/student/studentList'
 
 
 class MyRouter extends React.Component {
@@ -36,6 +37,8 @@ class MyRouter extends React.Component {
                                 <Route path="/admin/user/adminuser" component={AdminAccount} />
                                 <Route path="/admin/user/teauser" component={TeacherAccount} />
                                 <Route path="/admin/user/stuuser" component={StudentAccount} />
+                                <Route path="/admin/user/stulist/:year" component={StudentList} />
+
                                 <Route exact component={NoMatch} />
                             </Switch>
                         </Admin>

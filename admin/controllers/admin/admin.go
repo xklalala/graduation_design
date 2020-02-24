@@ -146,7 +146,7 @@ func Admin_MultipleAddStu(c *gin.Context) {
 
 	} else {
 		//获取sql语句
-		sql, err := util.ExcelGetSql([]string{"teacher_name", "teacher_id"}, "xtxt_user_student" + year, filename)
+		sql, err := util.ExcelGetSql([]string{"student_name", "student_id", "student_class_name"}, "xtxt_user_students_" + year, filename)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -168,7 +168,7 @@ func Admin_UpdateStu(c *gin.Context) {
 }
 
 //设置学生账号状态
-func Admin_SetStuStatus(c *gin.Context) {
+func SetStudentYearStatus(c *gin.Context) {
 	var status int = code.SUCCESS
 	var setStatus request_struct.UserStatus
 	//判断请求参数是否正确
@@ -176,8 +176,13 @@ func Admin_SetStuStatus(c *gin.Context) {
 		status = code.REQUEST_PARMS_ERROR
 	} else {
 		//请求逻辑
-		status = user.StudentSetStatus(setStatus.Id, c.Param("year"), setStatus.Status)
+		status = admin.SetStudentYearStatus(setStatus.Id, setStatus.Status)
 	}
-
 	code.R(http.StatusOK, status, "", c)
+}
+
+//删除学生
+func DeleteStudent(c *gin.Context) {
+	codes := user.StudentDelete(c.Param("id"), c.Param("year"))
+	code.R(http.StatusOK, codes, "", c)
 }

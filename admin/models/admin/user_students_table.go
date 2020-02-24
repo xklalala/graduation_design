@@ -4,6 +4,7 @@ import (
 	"byxt/admin/inits/mysql"
 	"byxt/admin/models/user"
 	"byxt/admin/pkg/code"
+	"fmt"
 )
 
 type UserStudentsTable struct {
@@ -28,9 +29,18 @@ func StuTabAdd(year int) int {
 //获取所有信息
 func StuTabAll() (int, []UserStudentsTable) {
 	var list []UserStudentsTable
-	if err:= mysql.Db.Select("*").Find(&list); err.Error != nil {
+	if err:= mysql.Db.Order("id desc").Find(&list); err.Error != nil {
 		return code.ERROR, []UserStudentsTable{}
 	} else {
 		return code.SUCCESS, list
 	}
+}
+
+func SetStudentYearStatus(id, status string) int {
+	var tables UserStudentsTable
+	if err := mysql.Db.Model(tables).Where("id = ?", id).Update("status", status); err.Error != nil {
+		fmt.Println(err.Error)
+		return code.ERROR
+	}
+	return code.SUCCESS
 }
