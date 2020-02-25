@@ -3,6 +3,7 @@ import Axios from 'axios'
 import {Form, Icon, Upload, Button, Row, Col, message, Input, Popconfirm, Table, Modal} from 'antd'
 import Highlighter from 'react-highlight-words';
 import MConfig from '../../../config'
+import getFormdata from '../../../public/js/getFormData'
 class StudentList extends React.Component {
     state = {
         data: []
@@ -13,6 +14,124 @@ class StudentList extends React.Component {
     sys_success = (msg) => {
         message.success(msg)
     }
+    handleCancel = () => {
+		this.setState({ visible: false });
+    };
+    handleSubmit = e => {
+        e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            console.log(values)
+            
+            if (!err) {
+                // 
+                let _this = this
+                let data = getFormdata({
+					student_name: 	values.name,
+					student_id: 	values.student_id,
+					student_class_name: 	values.class_name,
+					phone:     		typeof(values.phone) === undefined?values.phone:"",
+					another_contact:typeof(values.another_contact)  === undefined?values.another_contact:""
+				})
+                Axios.defaults.headers.common["token"] = localStorage.getItem("token");
+                Axios.post(
+					MConfig.request_url + '/admin/addStudent/'+ this.props.match.params.year, 
+					data
+                )
+                .then(function (response) {
+					if (response.data.code === 10001) {
+						_this.sys_success("添加成功")
+					} else {
+						_this.sys_error("请检查学号是否重复")
+					}
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+                this.setState({ visible: false })
+            } else {
+                this.sys_error("输入有误，请检查")
+            }
+        });
+	};
+    add_student = ()=> {
+		const { getFieldDecorator } = this.props.form;
+		return (
+			<Form onSubmit={this.handleSubmit} className="login-form">
+				<br/>
+				<h3 align="center">新增学生账号</h3>
+			<Form.Item>
+				{getFieldDecorator('name', {
+					rules: [
+						{ required: true, message: '请输入姓名' },
+						{ min:2, message:"教号最短为2位"}
+					],
+				})(
+					<Input
+					prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+					type="text"
+					placeholder="姓名"
+					/>,
+				)}
+			</Form.Item>
+			<Form.Item>
+				{getFieldDecorator('student_id', {
+					rules: [
+						{ required: true, message: '请输入学号' },
+						{ min:12, message:"学号为12位"},
+						{ max:12, message:"学号为12位"}
+					],
+				})(
+					<Input
+					prefix={<Icon type="number" style={{ color: 'rgba(0,0,0,.25)' }} />}
+					type="text"
+					placeholder="学号"
+					/>,
+				)}
+			</Form.Item>
+            <Form.Item>
+				{getFieldDecorator('class_name', {
+				})(
+					<Input
+					type="text"
+					placeholder="班级"
+					/>,
+				)}
+			</Form.Item>
+			<Form.Item>
+				{getFieldDecorator('phone', {
+					rules:[{pattern:/^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/, message:"请输入正确的手机号"}]
+				})(
+					<Input
+					prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />}
+					type="text"
+					placeholder="手机号"
+					
+					/>,
+				)}
+			</Form.Item>
+            
+			<Form.Item>
+				{getFieldDecorator('another_contact', {
+				})(
+					<Input
+					prefix={<Icon type="contacts" style={{ color: 'rgba(0,0,0,.25)' }} />}
+					type="text"
+					placeholder="其它联系方式"
+					/>,
+				)}
+			</Form.Item>
+			<Form.Item>
+			  <Button type="primary" htmlType="submit" className="login-form-button">
+				确定
+			</Button>
+			&nbsp;
+			<Button key="back" onClick={this.handleCancel}>
+				取消
+			</Button>,
+			</Form.Item>
+		  </Form>
+		)
+	}
     
     componentDidMount() {
         let _this = this
@@ -47,7 +166,7 @@ class StudentList extends React.Component {
             console.log(error);
         })
     }
-
+	
     deleteStu = (id, index) => {
         let _this = this
         let _data = this.state.data
@@ -72,7 +191,17 @@ class StudentList extends React.Component {
             console.log(error);
         })
     }
-
+    handleSearch = (selectedKeys, confirm, dataIndex) => {
+        confirm();
+        this.setState({
+            searchText: selectedKeys[0],
+            searchedColumn: dataIndex,
+        });
+        };
+        handleReset = clearFilters => {
+            clearFilters();
+            this.setState({ searchText: '' });
+            };
     getColumnSearchProps = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
           <div style={{ padding: 8 }}>
@@ -220,6 +349,9 @@ class StudentList extends React.Component {
         return (
             
             <div>
+                <Row>学生总人数：{this.state.data.length} 人
+                    </Row>
+                    <br/>
                 <Modal
                     visible={this.state.visible}
                     onOk={this.handleOk}
@@ -227,7 +359,7 @@ class StudentList extends React.Component {
                     mask={false}
                     footer={null}
                 >
-                    {/* {this.add_teacher()} */}
+                    {this.add_student()}
                 </Modal>
                 <Row>
 					<Col span={4}><a href={MConfig.request_url + '/studentExample.xlsx'}><Button icon="download">点击此处下载模板</Button></a></Col>
@@ -253,5 +385,4 @@ class StudentList extends React.Component {
         )
     }
 }
-
-export default StudentList
+export default Form.create()(StudentList);

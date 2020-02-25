@@ -66,7 +66,7 @@ r.GET("/api/getPublicSecret", controllers.GetPublicPem)
 		//获取学生列表（根据年份）
 		admin.GET("/getStuList/:year", admins.Admin_StuGetStuList)
 		//新增学生账号
-		admin.POST("/addStudent", admins.Admin_AddStu)
+		admin.POST("/addStudent/:year", admins.Admin_AddStu)
 		//批量导入学生账号
 		admin.POST("/multipleAddStu/:year", admins.Admin_MultipleAddStu)
 		//修改学生信息

@@ -11,16 +11,18 @@ type UserStudentsTable struct {
 	Id 		int 	`json:"id"`
 	Year 	int 	`json:"year"`
 	Number 	int 	`json:"number"`
-	Status 	string 	`json:"status"`
+	Status 	string 	`json:"status" gorm:"default:'1'"`
 	
 }
 //添加年份
 func StuTabAdd(year int) int {
-	var model UserStudentsTable
+	var model UserStudentsTable = UserStudentsTable{
+		Year:   year,
+	}
 	model.Year = year
 	codes := user.CreateTable(year)
 	if codes == code.SUCCESS {
-		if err := mysql.Db.Create(model); err.Error != nil {
+		if err := mysql.Db.Create(&model); err.Error != nil {
 			codes = code.ERROR
 		}
 	}

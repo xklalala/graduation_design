@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, Icon, Upload, Button, Row, Col, message, Input, Modal} from 'antd'
+import {Form, Button, Row, message, Input, Modal} from 'antd'
 import StudentYearPanel from './yearpanel'
 import MConfig from '../../../config'
 import Axios from 'axios'
@@ -7,6 +7,12 @@ class Student extends React.Component {
     state = {
         visible: false,
     };
+    sys_error = (msg) => {
+        message.error(msg)
+    }
+    sys_success = (msg) => {
+        message.success(msg)
+    }
     handleCancel = () => {
 		this.setState({ visible: false });
     };
@@ -22,8 +28,9 @@ class Student extends React.Component {
 					MConfig.request_url + '/admin/addStuYear/'+ values.year, 
                 )
                 .then(function (response) {
+                    console.log(response.data)
 					if (response.data.code === 10001) {
-						_this.sys_success("添加成功")
+						_this.sys_success("添加成功, 请刷新页面")
 					} else {
 						_this.sys_error("请检查教号是否重复")
 					}
@@ -70,7 +77,8 @@ class Student extends React.Component {
 			</Form.Item>
 		  </Form>
 		)
-	}
+    }
+    
     render() {
         
         return (

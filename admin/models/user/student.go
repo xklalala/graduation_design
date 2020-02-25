@@ -87,11 +87,12 @@ func StudentMultipleAddModel(sql string) int {
 
 //添加学生（单个）
 func StudentAdd(stu request_struct.Admin_AddStu, year string) int {
+
 	var status int = code.SUCCESS
-	if err := mysql.Db.Exec(
-		"INSERT INTO xtxt_user_students_? (student_id, phone_number, another_contact, student_name) VALUES(`?`, `?`, `?`, `?`)",
-		year, stu.StudentId, stu.PhoneNumber, stu.AnotherContact, stu.StudentName);
-	err != nil {
+	years , _ := strconv.Atoi(year)
+	if err := mysql.Db.Exec(fmt.Sprintf("INSERT INTO xtxt_user_students_%d (student_id, phone_number, another_contact, student_name) VALUES('%s', '%s', '%s', '%s')",
+		years, stu.StudentId, stu.PhoneNumber, stu.AnotherContact, stu.StudentName));
+	err.Error != nil {
 		status = code.ERROR
 	}
 	return status
@@ -138,7 +139,7 @@ func StudentSetStatus(id, year, setStatus string) int {
 func CreateTable(year int) int {
 	var sql string
 	table_name := "xtxt_user_students_" + strconv.Itoa(year)
-	sql = "DROP TABLE IF EXISTS "+ table_name +"; CREATE TABLE " + table_name + " LIKE xtxt_user_students_base"
+	sql = " CALL create_student_table(\""+ table_name +"\")"
 	err := mysql.Db.Exec(sql)
 	if err.Error != nil {
 		fmt.Println(err)

@@ -46,7 +46,7 @@ class YearPanel extends React.Component {
             let url = "/admin/user/stulist/" + data[i].year
             arr.push(
             <Timeline.Item key={i}>
-                <Link to={url}>{data[i].year} 届</Link>，学生人数 {data[i].number}; 账号状态：
+                <Link to={url}>{data[i].year} 届</Link>; 账号状态：
                 <Switch 
                     checkedChildren="启用"
                     unCheckedChildren="禁用"
@@ -62,6 +62,7 @@ class YearPanel extends React.Component {
         return (
             
             <div>
+               
                 <Timeline>
                     {this.showItem()}
                 </Timeline>
@@ -69,7 +70,6 @@ class YearPanel extends React.Component {
         )
     }
     onChange = (checked, id, index)=> {
-        console.log(checked, id, index)
         let _data = this.state.data
         _data[index].status = checked===true?"1":"0"
         
