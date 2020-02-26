@@ -2,11 +2,13 @@ package user
 
 import (
 	"byxt/admin/inits/mysql"
+	"byxt/admin/models/admin"
 	"byxt/admin/pkg/code"
 	"byxt/admin/pkg/mlog"
 	"byxt/admin/router/request_struct"
 	"fmt"
 	"strconv"
+	"time"
 )
 
 type Student struct {
@@ -22,19 +24,31 @@ type Student struct {
 
 //学生登录
 func StuLogin(username, password string) (int, string) {
-	var student Student
+	var students Student
+	res, _ := admin.GetSysIsOpen()
+	now_year := time.Now().Year()
+	if time.Now().Month() > 10 {
+		now_year += 1
+	}
+	if !res[strconv.FormatInt(int64(now_year), 10)] {
+		return code.SYSTEM_CLOSE, ""
+	}
+	//
+	//now_month := time.Now().Month()
+
+
 	year := username[0:4]
 	sql := fmt.Sprintf("SELECT student_password, student_name FROM xtxt_user_students_%s WHERE student_id = ? LIMIT 1", year)
-	err := mysql.Db.Raw(sql, username).Scan(&student)
+	err := mysql.Db.Raw(sql, username).Scan(&students)
 
 	if err.Error != nil {
 		mlog.Info(err.Error)
 		return code.USER_USER_NOT_EXIST, ""
 	}
-	if student.StudentPassword != password {
+	if students.StudentPassword != password {
 		return code.USER_USER_OR_PWD_FALSE, ""
 	}
-	return code.USER_LOGIN_SUCCESS, student.StudentName
+	return code.USER_LOGIN_SUCCESS, students.StudentName
 }
 
 //修改密码

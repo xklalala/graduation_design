@@ -79,7 +79,6 @@ func Login(c *gin.Context) {
 				fmt.Print(err.Error())
 				codes = code.SERVER_ERROR
 			}
-
 		}
 		fmt.Println(codes)
 		res := map[string]interface{}{

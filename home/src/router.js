@@ -13,7 +13,8 @@ import AdminAccount from './pages/admin/account/admin'
 import TeacherAccount from './pages/admin/account/teacher/teacher'
 import StudentAccount from './pages/admin/account/student/student'
 import StudentList from './pages/admin/account/student/studentList'
-
+import TeacherIndex from './pages/home/teacher/index/index'
+import TeacherUser from './pages/home/teacher/user/index'
 
 class MyRouter extends React.Component {
     
@@ -43,6 +44,13 @@ class MyRouter extends React.Component {
                             </Switch>
                         </Admin>
                     } />
+                    <Route path="/teacher" render={()=>
+                        <TeacherIndex>
+                            <Switch>
+                                <Route path="/teacher/editUserInfo" component={TeacherUser} />
+                                <Route exact component={NoMatch} />
+                            </Switch>
+                        </TeacherIndex>} />
                     <Route path="/footer"  component={Footer} />
                 </App>
             </HashRouter>

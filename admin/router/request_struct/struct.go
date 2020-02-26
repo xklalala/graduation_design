@@ -40,3 +40,10 @@ type Admin_AddStu struct {
 	PhoneNumber 	 string	`form:"phone_number"`
 	AnotherContact 	 string	`form:"another_contact"`
 }
+//教师更新账号
+type Teacher_update struct {
+	ID 				int		`form:"id"`
+	Teacher_name 	string  `form:"teacher_name" binding:"required"`
+	Phone 			string	`form:"phone"`
+	AnotherContact	string	`form:"another_contact"`
+}

@@ -3,6 +3,7 @@ package router
 import (
 	"byxt/admin/controllers"
 	admins "byxt/admin/controllers/admin"
+	"byxt/admin/controllers/teacher"
 	users "byxt/admin/controllers/user"
 	"byxt/admin/pkg/cors"
 	"byxt/admin/pkg/middleware/jwt"
@@ -85,8 +86,12 @@ r.GET("/api/getPublicSecret", controllers.GetPublicPem)
 	}
 
 	tea := r.Group("api/tea")
+	tea.Use(jwt.JWT("tea"))
 	{
 		tea.GET("getRoutesList")
+		tea.GET("/getTeacherInfo/:teacher_id", teacher.GetTeacherInfo)
+		tea.POST("/updateTeacherInfo", teacher.SetTeacherInfo)
+		tea.POST("/updateTeacherPwd", controllers.UpdatePwd)
 	}
 	return r
 }

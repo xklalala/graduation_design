@@ -275,7 +275,7 @@ class TeacherList extends React.Component {
                         {getFieldDecorator('name', {
                             rules: [
                                 { required: true, message: '请输入姓名' },
-                                { min:2, message:"教号最短为2位"}
+                                { min:2, message:"姓名最短为2位"}
                             ],
                             initialValue: form_data.name,
                         })(

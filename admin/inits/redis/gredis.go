@@ -109,3 +109,46 @@ func LikeDeletes(key string) error {
 
 	return nil
 }
+
+func Hset(key, key2, data string, time int) error {
+	conn := RedisConn.Get()
+	defer conn.Close()
+	_, err := conn.Do("hset", key, key2, data)
+	if err != nil {
+		return err
+	}
+
+	_, err = conn.Do("EXPIRE", key, time)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func Hget(key, key2 string) (string, error) {
+	conn := RedisConn.Get()
+	defer conn.Close()
+
+	return redis.String(conn.Do("hget", key, key2))
+}
+
+func StuGetEntry(key string) (map[string]bool, error){
+	conn := RedisConn.Get()
+	defer conn.Close()
+
+	result, err := redis.Values(conn.Do("hgetall", key))
+	if err != nil {
+		return map[string]bool{}, err
+	}
+	var res map[string]bool
+	res = make(map[string]bool)
+	length := len(result)
+	for i := 0; i < length - 1; i+= 2 {
+		var temp bool = false
+		if string(result[i+1].([]byte)) == "1" {
+			temp = true
+		}
+		res [string(result[i].([]byte))] = temp
+	}
+	return res, nil
+}

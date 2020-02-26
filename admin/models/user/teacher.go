@@ -30,7 +30,7 @@ func TeacherLogin(username, password string) (int, string) {
 	if teacher.TeacherPassword != password {
 		return code.USER_USER_OR_PWD_FALSE, ""
 	}
-	return code.USER_LOGIN_SUCCESS, teacher.TeacherName
+	return code.USER_LOGIN_SUCCESS, username
 }
 
 //修改密码
@@ -41,7 +41,7 @@ func TeainUpdatePwd(userId, oldPwd, newPwd string) int {
 	err := mysql.Db.Select("teacher_password").Where("teacher_id = ? ", userId).First(&teacher)
 
 	//出错或用户不存在，均处理为用户不存在
-	if err != nil {
+	if err.Error != nil {
 		mlog.Info(err.Error)
 		codes = code.USER_USER_NOT_EXIST
 		return codes
@@ -128,6 +128,33 @@ func TeacherMultipleAddModel(sql string) int {
 	err := mysql.Db.Exec(sql)
 	if err.Error != nil {
 		fmt.Println(err)
+		return code.ERROR
+	}
+	return code.SUCCESS
+}
+
+
+//获取单条教师信息
+func Tea_GetTeacherInfo(teacher_id string) (UserTeacher, int) {
+	var teacher UserTeacher
+	var codes int = code.SUCCESS
+	err := mysql.Db.Select("id, teacher_name, phone_number, another_contact").Where("teacher_id = ?", teacher_id).Find(&teacher)
+	if err.Error != nil {
+		codes = code.ERROR
+	}
+	return teacher, codes
+}
+
+//更新教师（教师）
+func Teacher_TeacherUpdate(data request_struct.Teacher_update) int {
+	var teacher UserTeacher
+	addTeacher := map[string]interface{}{
+		"TeacherName":		data.Teacher_name,
+		"PhoneNumber":  	data.Phone,
+		"AnotherContact":  	data.AnotherContact,
+	}
+	if err := mysql.Db.Model(&teacher).Where("id = ?", data.ID).Update(addTeacher); err.Error != nil {
+		fmt.Println(err.Error)
 		return code.ERROR
 	}
 	return code.SUCCESS

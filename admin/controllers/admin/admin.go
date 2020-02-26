@@ -99,7 +99,13 @@ func Admin_AddStudentYear(c *gin.Context) {
 	if err != nil {
 		status = code.REQUEST_PARMS_ERROR
 	} else {
-		status = admin.StuTabAdd(year)
+		status = user.CreateTable(year)
+		if status == code.SUCCESS {
+			status = admin.StuTabAdd(year)
+		} else {
+			status = code.ERROR
+		}
+
 	}
 	code.R(http.StatusOK, status, "", c)
 }

@@ -2,9 +2,10 @@ package admin
 
 import (
 	"byxt/admin/inits/mysql"
-	"byxt/admin/models/user"
+	"byxt/admin/inits/redis"
 	"byxt/admin/pkg/code"
 	"fmt"
+	"strconv"
 )
 
 type UserStudentsTable struct {
@@ -20,11 +21,9 @@ func StuTabAdd(year int) int {
 		Year:   year,
 	}
 	model.Year = year
-	codes := user.CreateTable(year)
-	if codes == code.SUCCESS {
-		if err := mysql.Db.Create(&model); err.Error != nil {
-			codes = code.ERROR
-		}
+	var codes int = code.SUCCESS
+	if err := mysql.Db.Create(&model); err.Error != nil {
+		codes = code.ERROR
 	}
 	return codes
 }
@@ -45,4 +44,25 @@ func SetStudentYearStatus(id, status string) int {
 		return code.ERROR
 	}
 	return code.SUCCESS
+}
+//获得系统是否开放
+func GetSysIsOpen() (map[string]bool, error){
+	//首先从redis中读取数据状态
+	res, err := redis.StuGetEntry("tea")
+	if err != nil {
+		fmt.Println("tea " ,err)
+	}
+	if len(res) == 0 {
+		var tables []UserStudentsTable
+		if err := mysql.Db.Find(&tables); err.Error != nil {
+			return map[string]bool{}, err.Error
+		}
+		for _, v := range tables {
+			redis.Hset("stu", strconv.Itoa(v.Year), v.Status, 30*60)
+		}
+	} else {
+		return res, nil
+	}
+	res, _ = redis.StuGetEntry("stu")
+	return res, nil
 }
