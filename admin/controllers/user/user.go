@@ -28,6 +28,7 @@ func Login(c *gin.Context) {
 		var user_real_name string
 		var codes int
 		var token string
+		var by_year int
 		//用户名密码
 		username, _ := pem.RsaDecrypt(login.Username)
 		password, _ := pem.RsaDecrypt(login.Password)
@@ -59,7 +60,7 @@ func Login(c *gin.Context) {
 				codes = code.SYSTEM_CLOSE
 			} else {
 				//系统开放
-				codes, user_real_name = user.StuLogin(username, password)
+				codes, user_real_name, by_year = user.StuLogin(username, password)
 			}
 		default:
 			codes = code.USER_LOGIN_TYPE_ERROR
@@ -72,8 +73,9 @@ func Login(c *gin.Context) {
 			h.Write([]byte(username + time.Now().Format("2006-01-02 15:04:05")))
 			token = hex.EncodeToString(h.Sum(nil))
 
-			//缓存数据    身份|-|登陆ip|-|用户id|-|10位时间戳
-			cacheData := login.Type + "|-|" + c.ClientIP() + "|-|" + user_real_name + "|-|" + strconv.FormatInt(time.Now().Unix(), 10)
+			//缓存数据    身份|-|登陆ip|-|用户id|-|10位时间戳|-|毕业届（教室管理员默认为0）
+			cacheData := login.Type + "|-|" + c.ClientIP() + "|-|" + user_real_name + "|-|" + strconv.FormatInt(time.Now().Unix(), 10) + "|-|" + strconv.FormatInt(int64(by_year), 10)
+			fmt.Println(cacheData)
 			err := redis.Set(token, cacheData, int(time.Second*30))
 			if err != nil {
 				fmt.Print(err.Error())
@@ -84,6 +86,7 @@ func Login(c *gin.Context) {
 		res := map[string]interface{}{
 			"token":    token,
 			"username": user_real_name,
+			"by_year": by_year,
 		}
 
 		code.R(http.StatusOK, codes, res, c)

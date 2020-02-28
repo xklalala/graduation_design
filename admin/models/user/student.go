@@ -22,33 +22,69 @@ type Student struct {
 	StudentName     	string `json:"student_name"`
 }
 
-//学生登录
-func StuLogin(username, password string) (int, string) {
+//学生登录 return 状态， student_id, 毕业届
+func StuLogin(username, password string) (int, string, int) {
 	var students Student
+	//获取各个年份的系统开放情况
 	res, _ := admin.GetSysIsOpen()
+	//考虑到大部分登陆的都是当前年届的
 	now_year := time.Now().Year()
+	//如果月份是10月份之后，毕业年份为下一年
 	if time.Now().Month() > 10 {
 		now_year += 1
 	}
-	if !res[strconv.FormatInt(int64(now_year), 10)] {
-		return code.SYSTEM_CLOSE, ""
-	}
-	//
-	//now_month := time.Now().Month()
+	status := code.USER_LOGIN_SUCCESS
 
+	//如果当前毕业届系统关闭
+	if !res[strconv.FormatInt(int64(now_year), 10)] {
+		status = code.SYSTEM_CLOSE
+	} else {
+		sql := fmt.Sprintf("SELECT id,student_id, student_password, student_name FROM xtxt_user_students_%d WHERE student_id = ? LIMIT 1", now_year)
+		err := mysql.Db.Raw(sql, username).Scan(&students)
+		if err.Error != nil {
+			mlog.Info(err.Error)
+			status = code.USER_USER_NOT_EXIST
+		}
+
+		//用户存在
+		if students.Id != 0 {
+			//如果用户存在，而且密码错误
+			if students.StudentPassword != password {
+				fmt.Println("存在")
+				return code.USER_USER_OR_PWD_FALSE, "", 0
+			} else {
+				return code.USER_LOGIN_SUCCESS, students.StudentId, now_year
+			}
+		}
+	}
 
 	year := username[0:4]
-	sql := fmt.Sprintf("SELECT student_password, student_name FROM xtxt_user_students_%s WHERE student_id = ? LIMIT 1", year)
-	err := mysql.Db.Raw(sql, username).Scan(&students)
+	year_int, _ := strconv.Atoi(year)
+	year_int += 4 //默认学号登陆
+	//
+	//首先根据学号判断毕业届,不考虑留级的
+	if !res[strconv.FormatInt(int64(year_int), 10)] {
+		status = code.SYSTEM_CLOSE
+	} else {
+		sql := fmt.Sprintf("SELECT id, student_password, student_name FROM xtxt_user_students_%d WHERE student_id = ? LIMIT 1", year_int)
+		err := mysql.Db.Raw(sql, username).Scan(&students)
+		if err.Error != nil {
+			mlog.Info(err.Error)
+			status = code.USER_USER_NOT_EXIST
+		}
 
-	if err.Error != nil {
-		mlog.Info(err.Error)
-		return code.USER_USER_NOT_EXIST, ""
+		//用户存在
+		if students.Id != 0 {
+			//如果用户存在，而且密码错误
+			if students.StudentPassword != password {
+				return code.USER_USER_OR_PWD_FALSE, "", 0
+			} else {
+				status = code.USER_LOGIN_SUCCESS
+			}
+		}
 	}
-	if students.StudentPassword != password {
-		return code.USER_USER_OR_PWD_FALSE, ""
-	}
-	return code.USER_LOGIN_SUCCESS, students.StudentName
+
+	return status, students.StudentId, year_int
 }
 
 //修改密码

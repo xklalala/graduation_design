@@ -10,6 +10,11 @@ export default [
         icon: 'info',
     },
     {
+        title: "选题管理",
+        key: '/teacher/setItem',
+        icon: 'setting'
+    },
+    {
         title:'个人信息管理',
         key:'/index/C',
         children: [

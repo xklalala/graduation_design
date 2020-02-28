@@ -30,7 +30,7 @@ func StuTabAdd(year int) int {
 //获取所有信息
 func StuTabAll() (int, []UserStudentsTable) {
 	var list []UserStudentsTable
-	if err:= mysql.Db.Order("id desc").Find(&list); err.Error != nil {
+	if err:= mysql.Db.Order("year desc").Find(&list); err.Error != nil {
 		return code.ERROR, []UserStudentsTable{}
 	} else {
 		return code.SUCCESS, list

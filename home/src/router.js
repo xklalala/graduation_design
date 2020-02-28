@@ -15,6 +15,8 @@ import StudentAccount from './pages/admin/account/student/student'
 import StudentList from './pages/admin/account/student/studentList'
 import TeacherIndex from './pages/home/teacher/index/index'
 import TeacherUser from './pages/home/teacher/user/index'
+import TeacherSetItem from './pages/home/teacher/xt/xt'
+import TeacherSetItemDetail from './pages/home/teacher/xt/xtDetail'
 
 class MyRouter extends React.Component {
     
@@ -48,6 +50,8 @@ class MyRouter extends React.Component {
                         <TeacherIndex>
                             <Switch>
                                 <Route path="/teacher/editUserInfo" component={TeacherUser} />
+                                <Route exact path="/teacher/setItem" component={TeacherSetItem} />
+                                <Route path="/teacher/setItem/:year" component={TeacherSetItemDetail} />
                                 <Route exact component={NoMatch} />
                             </Switch>
                         </TeacherIndex>} />

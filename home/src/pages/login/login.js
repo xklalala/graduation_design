@@ -71,13 +71,12 @@ class Login extends React.Component {
                         .then(function (response) {
                             if (response.data.code === 20005) {
                                 self.login_success()
-                                console.log(response.data)
                                 localStorage.setItem("token", response.data.data.token)
                                 localStorage.setItem("name", response.data.data.username)
+                                localStorage.setItem("by_year", response.data.data.by_year)
                                 localStorage.setItem("sf", values.loginType)
                                 localStorage.setItem("user_id", values.username)
                                 Axios.defaults.headers.common["token"] = localStorage.getItem("token");
-                                console.log(values.loginType)
                                 if (values.loginType === "adm") {
                                     self.props.history.push("/admin")
                                 } else if(values.loginType === "tea") {
