@@ -1,10 +1,19 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import { Button, Row, Col, Card, Modal, Form, Input, Select } from 'antd'
+import { Button, Row, Col, Card, Modal, Form, Input, Select , Popconfirm, message} from 'antd'
+const { TextArea } = Input
 class XtDetail extends React.Component {
     state = {
         data: null,
         visible: false
+    }
+    confirm = (e)=> {
+        console.log(e);
+        message.success('Click on Yes');
+    }
+    cancel = (e) => {
+        console.log(e);
+        message.error('Click on No');
     }
     componentDidMount() {
         let data = [
@@ -14,7 +23,10 @@ class XtDetail extends React.Component {
                 question_type: "系统",
                 hard: "简单",
                 student: <Link to="/">待确定</Link>,
-                status: "未提交"
+                status: "未提交",
+                describe:"智能辅助驾驶，智能监控，智能"+
+                "机器人等领域。基于统计学习的方法是行人检测的常用方法，即根据大量的样本构建行人检测分类器。"+"提取的特征主要包含目标的灰度、边缘、纹理、颜色、梯度直方图等信息。想要获得较好的检测效果可以采取多特征融合"+
+                "的方法以及级联分类器，常用的特征有：Hog特征、LBT特征等。学生通过实现一个基于视频处理行人检测与跟踪系统，一方面该技术拥有很高的实用价值，另"
             },
             {
                 id: 2,
@@ -47,11 +59,27 @@ class XtDetail extends React.Component {
             for (let i in _data) {
                 card.push(
                     <Col span={8} key={_data[i].id}>
-                        <Card size="small" title="毕业选题系统" extra={<a href="#">修改</a>} style={{ width: 300 }}>
+                        <Card 
+                                    size="small" title="毕业选题系统"
+                                    extra={
+                                        <span>
+                                            <a href="#">修改</a> |  
+                                        <Popconfirm
+                                        title="你确定要删除这个选题吗（当确定学生后无法删除）?"
+                                        onConfirm={this.confirm}
+                                        onCancel={this.cancel}
+                                        okText="是"
+                                        cancelText="否"
+                                        >
+                                            <a href="#"> 删除</a>
+                                        </Popconfirm>
+                                        </span>
+                                        } style={{ width: 300 }}>
                             <p><b>选题类型：</b>{_data[i].question_type}</p>
                             <p><b>选题难度：</b>{_data[i].hard}</p>
                             <p><b>选题学生：</b>{_data[i].student}</p>
                             <p><b>选题状态：</b>{_data[i].status}</p>
+                            <p><b>选题描述：</b>{_data[i].describe}</p>
                         </Card>
                     </Col>
                 )
@@ -118,7 +146,19 @@ class XtDetail extends React.Component {
                                 </Select>,
                             )}
                         </Form.Item>
-
+                        <Form.Item label="选题描述">
+                            {getFieldDecorator('describe', {
+                                rules: [
+                                  
+                                ],
+                            })(
+                                <TextArea
+                                rows={4}
+                                cols={4}
+                                placeholder="选题题目"
+                                />,
+                            )}
+                        </Form.Item>
 
                         <Form.Item>
                         <Button type="primary" htmlType="submit" className="login-form-button">
