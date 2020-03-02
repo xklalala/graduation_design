@@ -82,7 +82,7 @@ class Login extends React.Component {
                                 } else if(values.loginType === "tea") {
                                     self.props.history.push("/teacher")
                                 } else if (values.loginType === "stu") {
-
+                                    self.props.history.push("/stu")
                                 }
                                 // 
                                 

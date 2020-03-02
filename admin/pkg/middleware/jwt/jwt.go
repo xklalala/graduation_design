@@ -3,11 +3,9 @@ package jwt
 import (
 	"byxt/admin/inits/redis"
 	mcode "byxt/admin/pkg/code"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -22,7 +20,7 @@ func JWT(auth string) gin.HandlerFunc {
 			codes = mcode.TOKEN_ERROR
 		}
 
-		data, err := GetUserRedisInfo(token)
+		data, err := redis.GetUserRedisInfo(token)
 		//缓存token失效或不存在
 		if err != nil {
 			codes = mcode.TOKEN_ERROR
@@ -56,15 +54,3 @@ func JWT(auth string) gin.HandlerFunc {
 	}
 }
 
-//获取用户缓存信息 身份，ip，账号, 时间
-func GetUserRedisInfo(token string) ([]string, error) {
-	info, err := redis.Get(token)
-	fmt.Println(info)
-	if err != nil {
-		fmt.Println(err.Error())
-		return []string{"", "", ""}, err
-	}
-	//去掉引号
-	info = info[1:len(info)-1]
-	return strings.Split(info, "|-|"), nil
-}

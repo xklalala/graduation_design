@@ -17,7 +17,7 @@ import TeacherIndex from './pages/home/teacher/index/index'
 import TeacherUser from './pages/home/teacher/user/index'
 import TeacherSetItem from './pages/home/teacher/xt/xt'
 import TeacherSetItemDetail from './pages/home/teacher/xt/xtDetail'
-
+import Student  from './pages/home/student/index/student'
 class MyRouter extends React.Component {
     
     render() {
@@ -54,7 +54,19 @@ class MyRouter extends React.Component {
                                 <Route path="/teacher/setItem/:year" component={TeacherSetItemDetail} />
                                 <Route exact component={NoMatch} />
                             </Switch>
-                        </TeacherIndex>} />
+                         </TeacherIndex>} 
+                    />
+                    
+                    <Route path="/stu" render={()=>
+                        <Student>
+                            <Switch>
+                            <Route path="/teacher/editUserInfo" component={TeacherUser} /> 
+                        
+                            <Route exact component={NoMatch} />
+                            </Switch>
+                        </Student>
+                    } />
+
                     <Route path="/footer"  component={Footer} />
                 </App>
             </HashRouter>

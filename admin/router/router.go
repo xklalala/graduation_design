@@ -89,9 +89,22 @@ r.GET("/api/getPublicSecret", controllers.GetPublicPem)
 	tea.Use(jwt.JWT("tea"))
 	{
 		tea.GET("getRoutesList")
+		//获取教师信息
 		tea.GET("/getTeacherInfo/:teacher_id", teacher.GetTeacherInfo)
+		//更新个人信息
 		tea.POST("/updateTeacherInfo", teacher.SetTeacherInfo)
+		//更新密码
 		tea.POST("/updateTeacherPwd", controllers.UpdatePwd)
+		//获取学生年份列表
+		tea.GET("/getStuYearList", admins.Admin_StuYearList)
+		//新增选题
+		tea.POST("/xt/:year", teacher.TeaC_AddXt)
+		//更新选题
+		tea.PUT("/xt", teacher.TeaC_UpdateXt)
+		//删除选题
+		tea.DELETE("/xt/:id", teacher.TeaC_DeleteXt)
+		//教师获取自己的选题
+		tea.GET("/xt/:year", teacher.TeaC_GetXt)
 	}
 	return r
 }

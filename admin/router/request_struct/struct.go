@@ -47,3 +47,12 @@ type Teacher_update struct {
 	Phone 			string	`form:"phone"`
 	AnotherContact	string	`form:"another_contact"`
 }
+
+//教师新增(修改)选题
+type Teacher_add_xt struct {
+	Id 		 int    `form:"id"`
+	Title    string `form:"title" binding:"required"`
+	Type 	 string `form:"type" binding:"required"`
+	Hard 	 string `form:"hard" binding:"required"`
+	Describe string `form:"describe"`
+}

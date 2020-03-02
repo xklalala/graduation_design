@@ -1,56 +1,92 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import { Button, Row, Col, Card, Modal, Form, Input, Select , Popconfirm, message} from 'antd'
+import MConfig from '../../../config'
+import getFormdata from '../../../public/js/getFormData'
+import Axios from 'axios'
 const { TextArea } = Input
+
 class XtDetail extends React.Component {
     state = {
         data: null,
-        visible: false
+        visible: false,
+        editVisible:false,
+        tempdata: {
+            title:"",
+            xt_type:"应用实践",
+            hard:"简单",
+            describe:""
+        },
     }
-    confirm = (e)=> {
-        console.log(e);
-        message.success('Click on Yes');
+    sys_success = (msg) => {
+        message.success(msg)
+    }
+    sys_error = (msg) => {
+        message.error(msg)
+    }
+    confirm = (id, index)=> {
+        console.log(id, index);
+        let _data = this.state.data
+        let _this = this
+        Axios.defaults.headers.common["token"] = localStorage.getItem("token");
+        Axios.delete(MConfig.request_url + '/tea/xt/'+id, )
+        .then(function (response) {
+            if (response.data.code === 10001) {
+                _this.sys_success("删除成功");
+                _data.splice(index, 1)
+                _this.setState({
+                    data:_data
+                })
+            } else {
+                _this.sys_error("网络错误，请重试")
+            }
+        })
+        .catch(function (error) {
+                console.log(error);
+        }) 
+
     }
     cancel = (e) => {
         console.log(e);
         message.error('Click on No');
     }
     componentDidMount() {
-        let data = [
-            {
-                id: 1,
-                title:"毕业选题系统",
-                question_type: "系统",
-                hard: "简单",
-                student: <Link to="/">待确定</Link>,
-                status: "未提交",
-                describe:"智能辅助驾驶，智能监控，智能"+
-                "机器人等领域。基于统计学习的方法是行人检测的常用方法，即根据大量的样本构建行人检测分类器。"+"提取的特征主要包含目标的灰度、边缘、纹理、颜色、梯度直方图等信息。想要获得较好的检测效果可以采取多特征融合"+
-                "的方法以及级联分类器，常用的特征有：Hog特征、LBT特征等。学生通过实现一个基于视频处理行人检测与跟踪系统，一方面该技术拥有很高的实用价值，另"
-            },
-            {
-                id: 2,
-                title:"基于JAVA的袜子后台管理系统",
-                question_type: "理论研究",
-                hard: "中等",
-                student: <Link to="/">未名</Link>,
-                status: "未提交"
-            },
-            {
-                id: 4,
-                title:"小朱哥云盘",
-                question_type: "系统",
-                hard: "困难",
-                student: <Link to="/">狗子根</Link>,
-                status: "未提交"
+        let _this = this
+
+        Axios.defaults.headers.common["token"] = localStorage.getItem("token");
+        Axios.get(MConfig.request_url + '/tea/xt/'+this.props.match.params.year, )
+        .then(function (response) {
+            console.log(response.data)
+            if (response.data.code === 10001) {
+                let res  = []
+                for(let i in response.data.data) {
+                    res.push(response.data.data[i])
+                }
+                _this.setState({
+                    data: res
+                })
+            } else {
+                _this.sys_error("网络错误，请重试")
             }
-        ]
-        this.setState({
-            data: data
         })
+        .catch(function (error) {
+                console.log(error);
+        }) 
     }
     handleCancel = () => {
 		this.setState({ visible: false });
+    }
+    editHandleCancel = () => {
+		this.setState({ editVisible: false });
+    }
+    edit = (id, index) => {
+        console.log("edit")
+        console.log(id)
+        let _data = this.state.data[index]
+        this.setState({
+            editVisible:true,
+            tempdata: _data
+        })
     }
     showCard = () => {
         let card = []
@@ -58,15 +94,16 @@ class XtDetail extends React.Component {
         if (_data != null) {
             for (let i in _data) {
                 card.push(
-                    <Col span={8} key={_data[i].id}>
+                    <Col span={8} key={i}>
                         <Card 
-                                    size="small" title="毕业选题系统"
+                                    size="small"
+                                    title= {_data[i].title}
                                     extra={
                                         <span>
-                                            <a href="#">修改</a> |  
+                                            <a onClick={()=>this.edit(_data[i].id, i)}>修改</a> |  
                                         <Popconfirm
                                         title="你确定要删除这个选题吗（当确定学生后无法删除）?"
-                                        onConfirm={this.confirm}
+                                        onConfirm={ () =>this.confirm(_data[i].id, i)}
                                         onCancel={this.cancel}
                                         okText="是"
                                         cancelText="否"
@@ -75,12 +112,13 @@ class XtDetail extends React.Component {
                                         </Popconfirm>
                                         </span>
                                         } style={{ width: 300 }}>
-                            <p><b>选题类型：</b>{_data[i].question_type}</p>
+                            <p><b>选题类型：</b>{_data[i].xt_type}</p>
                             <p><b>选题难度：</b>{_data[i].hard}</p>
                             <p><b>选题学生：</b>{_data[i].student}</p>
-                            <p><b>选题状态：</b>{_data[i].status}</p>
+                            {/* <p><b>选题状态：</b>{_data[i].status==="0"?"未选择":"已经选择"}</p> */}
                             <p><b>选题描述：</b>{_data[i].describe}</p>
                         </Card>
+                        <br/>
                     </Col>
                 )
             }
@@ -89,19 +127,128 @@ class XtDetail extends React.Component {
             return null
         }
     }
+    
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             console.log(values)
             if (!err) {
-				
+                console.log("success")
+                let _this = this
+                let send = getFormdata({
+                    title: values.title,
+                    type: values.type,
+                    hard: values.hard,
+                    describe: values.describe
+                })
+                Axios.defaults.headers.common["token"] = localStorage.getItem("token");
+                Axios.post(
+                    MConfig.request_url + '/tea/xt/'+this.props.match.params.year, 
+                    send
+                )
+                .then(function (response) {
+                    console.log(response.data)
+                    if (response.data.code === 10001) {
+                        _this.setState({
+                            visible:false
+                        })
+                        _this.sys_success("添加成功")
+                        setTimeout(() => {
+                            window.location.reload()
+                        }, 50);
+                        
+                    } else {
+                        _this.sys_error("网络错误，请重试")
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
             }
         });
-	};
+    };
+    editHandleSubmit = e => {
+        console.log("editsubmit")
+        e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            console.log(values)
+            if (!err) {
+			
+            }
+        });
+    };
+
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
             <div>
+                <Modal
+                    visible={this.state.editVisible}
+                    onOk={this.editHandleOk}
+                    onCancel={this.editHandleCancel}
+                    mask={false}
+                    footer={null}
+                >
+<Form onSubmit={this.editHandleSubmit} className="login-form">
+                        <Form.Item label="选题题目">
+                            {getFieldDecorator('title', {
+                                initialValue:this.state.tempdata.title,
+                                rules: [
+                                    { required: true, message: '请输入选题' },
+                                    { min: 2, message: '最少为2位' },
+                                ],
+                            })(
+                                <Input
+                                type="text"
+                                placeholder="选题题目"
+                                />,
+                            )}
+                        </Form.Item>
+                        <Form.Item label="选题类型">
+                            {getFieldDecorator('type', {
+                                initialValue:this.state.tempdata.xt_type
+                            })(
+                                <Select>
+                                    <Select.Option value="应用实践">应用实践</Select.Option>
+                                    <Select.Option value="理论研究">理论研究</Select.Option>
+                                </Select>,
+                            )}
+                        </Form.Item>
+                        <Form.Item label="选题难度">
+                            {getFieldDecorator('hard', {
+                                initialValue:this.state.tempdata.hard
+                            })(
+                                <Select>
+                                    <Select.Option value="简单">简单</Select.Option>
+                                    <Select.Option value="中等">中等</Select.Option>
+                                    <Select.Option value="困难">困难</Select.Option>
+                                </Select>,
+                            )}
+                        </Form.Item>
+                        <Form.Item label="选题描述">
+                            {getFieldDecorator('describe', {
+                                initialValue:this.state.tempdata.describe
+                            })(
+                                <TextArea
+                                rows={4}
+                                cols={4}
+                                placeholder="选题题目"
+                                />,
+                            )}
+                        </Form.Item>
+
+                        <Form.Item>
+                        <Button type="primary" htmlType="submit" className="login-form-button">
+                            确定
+                        </Button>
+                        &nbsp;
+                        <Button key="back" onClick={this.editHandleCancel}>
+                            取消
+                        </Button>,
+                        </Form.Item>
+                    </Form>
+                </Modal>
+
                 <Modal
                     visible={this.state.visible}
                     onOk={this.handleOk}
@@ -186,9 +333,9 @@ class XtDetail extends React.Component {
                 <Row>
                     <h3>我的课题：</h3>
                 </Row>
-                <Row>
-                    {this.showCard()}
-                </Row>
+                   <Row>
+                   {this.showCard()}
+                   </Row>
             </div>
         )
     }

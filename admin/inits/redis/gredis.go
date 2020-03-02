@@ -4,6 +4,7 @@ import (
 	"byxt/admin/pkg/setting"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/gomodule/redigo/redis"
@@ -151,4 +152,17 @@ func StuGetEntry(key string) (map[string]bool, error){
 		res [string(result[i].([]byte))] = temp
 	}
 	return res, nil
+}
+
+//获取用户缓存信息 身份，ip，账号, 时间
+func GetUserRedisInfo(token string) ([]string, error) {
+	info, err := Get(token)
+	fmt.Println(info)
+	if err != nil {
+		fmt.Println(err.Error())
+		return []string{"", "", ""}, err
+	}
+	//去掉引号
+	info = info[1:len(info)-1]
+	return strings.Split(info, "|-|"), nil
 }

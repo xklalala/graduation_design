@@ -1,10 +1,10 @@
 package controllers
 
 import (
+	"byxt/admin/inits/redis"
 	"byxt/admin/models/user"
 	"byxt/admin/pem"
 	"byxt/admin/pkg/code"
-	"byxt/admin/pkg/middleware/jwt"
 	"byxt/admin/pkg/setting"
 	"byxt/admin/router/request_struct"
 	"crypto/md5"
@@ -40,7 +40,7 @@ func UpdatePwd(c *gin.Context) {
 	} else {
 		//获取用户id
 		token := c.Request.Header.Get("token")
-		info,err := jwt.GetUserRedisInfo(token)
+		info,err := redis.GetUserRedisInfo(token)
 		if err != nil {
 			//如果token获取失败，判定为token超时
 			code.R(http.StatusOK, code.TOKEN_TIME_OUT, "", c)
