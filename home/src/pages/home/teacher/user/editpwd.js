@@ -1,9 +1,9 @@
 import React from 'react'
 import { Form, Icon, Input, Button, message } from 'antd';
-import getFormdata from '../../../public/js/getFormData'
 import JSEncrypt from 'jsencrypt'
 import Axios from 'axios'
 import MConfig from '../../../config'
+import getFormdata from '../../../public/js/getFormData'
 class EditPwd extends React.Component {
     sys_warning = (msg)=>{
         message.warning(msg)

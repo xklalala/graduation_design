@@ -3,6 +3,7 @@ package router
 import (
 	"byxt/admin/controllers"
 	admins "byxt/admin/controllers/admin"
+	"byxt/admin/controllers/student"
 	"byxt/admin/controllers/teacher"
 	users "byxt/admin/controllers/user"
 	"byxt/admin/pkg/cors"
@@ -76,13 +77,13 @@ r.GET("/api/getPublicSecret", controllers.GetPublicPem)
 		admin.DELETE("/studentDelete/:id/:year", admins.DeleteStudent)
 		//设置年份学生状态
 		admin.POST("/stuSetStatus", admins.SetStudentYearStatus)
-
-
 	}
 
 	stu := r.Group("api/stu")
 	{
 		stu.GET("getRoutesList")
+		stu.GET("/xt", student.GetAllXtList)
+		stu.GET("/xt/status")
 	}
 
 	tea := r.Group("api/tea")

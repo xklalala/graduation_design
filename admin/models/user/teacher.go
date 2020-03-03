@@ -10,7 +10,7 @@ import (
 )
 
 type UserTeacher struct {
-	Id				string `json:"id"`
+	Id				int    `json:"id"`
 	TeacherId       string `json:"teacher_id"`
 	TeacherName     string `json:"teacher_name"`
 	TeacherPassword string `json:"teacher_password"`
@@ -20,17 +20,18 @@ type UserTeacher struct {
 }
 
 //教师登录
-func TeacherLogin(username, password string) (int, string) {
+func TeacherLogin(username, password string) (int, string, int) {
 	var teacher UserTeacher
-	err := mysql.Db.Select("teacher_password, teacher_name").Where("teacher_id = ?", username).First(&teacher)
+	err := mysql.Db.Select("id, teacher_password, teacher_name").Where("teacher_id = ?", username).First(&teacher)
 	if err.Error != nil {
 		mlog.Info(err.Error)
-		return code.USER_USER_NOT_EXIST, ""
+		return code.USER_USER_NOT_EXIST, "", 0
 	}
 	if teacher.TeacherPassword != password {
-		return code.USER_USER_OR_PWD_FALSE, ""
+		return code.USER_USER_OR_PWD_FALSE, "", 0
 	}
-	return code.USER_LOGIN_SUCCESS, username
+	fmt.Println(teacher.Id)
+	return code.USER_LOGIN_SUCCESS, username, teacher.Id
 }
 
 //修改密码

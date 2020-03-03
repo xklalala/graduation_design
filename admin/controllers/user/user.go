@@ -29,6 +29,7 @@ func Login(c *gin.Context) {
 		var codes int
 		var token string
 		var by_year int
+		var id int
 		//用户名密码
 		username, _ := pem.RsaDecrypt(login.Username)
 		password, _ := pem.RsaDecrypt(login.Password)
@@ -46,11 +47,11 @@ func Login(c *gin.Context) {
 				codes = code.SYSTEM_CLOSE
 			} else {
 				//系统开放
-				codes, user_real_name = user.TeacherLogin(username, password)
+				codes, user_real_name, id = user.TeacherLogin(username, password)
 			}
 		// 管理员登录
 		case "adm":
-			codes = user.Login(username, password)
+			codes, id = user.Login(username, password)
 			user_real_name = username
 		//学生登录
 		case "stu":
@@ -60,7 +61,7 @@ func Login(c *gin.Context) {
 				codes = code.SYSTEM_CLOSE
 			} else {
 				//系统开放
-				codes, user_real_name, by_year = user.StuLogin(username, password)
+				codes, user_real_name, by_year, id = user.StuLogin(username, password)
 			}
 		default:
 			codes = code.USER_LOGIN_TYPE_ERROR
@@ -73,8 +74,8 @@ func Login(c *gin.Context) {
 			h.Write([]byte(username + time.Now().Format("2006-01-02 15:04:05")))
 			token = hex.EncodeToString(h.Sum(nil))
 
-			//缓存数据    身份|-|登陆ip|-|用户id|-|10位时间戳|-|毕业届（教室管理员默认为0）
-			cacheData := login.Type + "|-|" + c.ClientIP() + "|-|" + user_real_name + "|-|" + strconv.FormatInt(time.Now().Unix(), 10) + "|-|" + strconv.FormatInt(int64(by_year), 10)
+			//缓存数据    身份|-|登陆ip|-|用户id|-|10位时间戳|-|毕业届（教室管理员默认为0）|-|id
+			cacheData := login.Type + "|-|" + c.ClientIP() + "|-|" + user_real_name + "|-|" + strconv.FormatInt(time.Now().Unix(), 10) + "|-|" + strconv.FormatInt(int64(by_year), 10) + "|-|" + strconv.Itoa(id)
 			fmt.Println(cacheData)
 			err := redis.Set(token, cacheData, int(time.Second*30))
 			if err != nil {

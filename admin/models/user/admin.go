@@ -8,6 +8,7 @@ import (
 )
 
 type UserAdmin struct {
+	Id 			int    `json:"id"`
 	UserId 		string `json:"user_id"`
 	Password 	string `json:"password"`
 }
@@ -22,17 +23,17 @@ func ExistUser(userId string) bool {
 	return true
 }
 //登陆
-func Login(user, pwd string) int {
+func Login(user, pwd string) (int, int) {
 	var useradmin UserAdmin
-	err := mysql.Db.Select("password").Where("user_id = ? ", user).First(&useradmin)
+	err := mysql.Db.Select("id, password").Where("user_id = ? ", user).First(&useradmin)
 	if err.Error != nil {
 		mlog.Info(err.Error)
-		return code.USER_USER_NOT_EXIST
+		return code.USER_USER_NOT_EXIST, 0
 	}
 	if useradmin.Password != pwd {
-		return code.USER_USER_OR_PWD_FALSE
+		return code.USER_USER_OR_PWD_FALSE, 0
 	}
-	return code.USER_LOGIN_SUCCESS
+	return code.USER_LOGIN_SUCCESS, useradmin.Id
 }
 //修改密码
 func AdminUpdatePwd(userId, oldPwd, newPwd string) int {

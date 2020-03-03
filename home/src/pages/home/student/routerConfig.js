@@ -1,7 +1,7 @@
 export default [
     {
         title:'首页',
-        key: '/index/home',
+        key: '/stu/index',
         icon:"home"
     },
     {

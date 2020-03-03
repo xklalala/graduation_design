@@ -23,7 +23,7 @@ type Student struct {
 }
 
 //学生登录 return 状态， student_id, 毕业届
-func StuLogin(username, password string) (int, string, int) {
+func StuLogin(username, password string) (int, string, int, int) {
 	var students Student
 	//获取各个年份的系统开放情况
 	res, _ := admin.GetSysIsOpen()
@@ -51,9 +51,9 @@ func StuLogin(username, password string) (int, string, int) {
 			//如果用户存在，而且密码错误
 			if students.StudentPassword != password {
 				fmt.Println("存在")
-				return code.USER_USER_OR_PWD_FALSE, "", 0
+				return code.USER_USER_OR_PWD_FALSE, "", 0, 0
 			} else {
-				return code.USER_LOGIN_SUCCESS, students.StudentId, now_year
+				return code.USER_LOGIN_SUCCESS, students.StudentId, now_year, students.Id
 			}
 		}
 	}
@@ -77,14 +77,14 @@ func StuLogin(username, password string) (int, string, int) {
 		if students.Id != 0 {
 			//如果用户存在，而且密码错误
 			if students.StudentPassword != password {
-				return code.USER_USER_OR_PWD_FALSE, "", 0
+				return code.USER_USER_OR_PWD_FALSE, "", 0, 0
 			} else {
 				status = code.USER_LOGIN_SUCCESS
 			}
 		}
 	}
 
-	return status, students.StudentId, year_int
+	return status, students.StudentId, year_int, students.Id
 }
 
 //修改密码
