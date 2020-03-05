@@ -62,9 +62,9 @@ class MyRouter extends React.Component {
                         <Student>
                             <Switch>
                             <Route path="/teacher/editUserInfo" component={TeacherUser} /> 
-                            <Route path="/stu/index" component={StudentXt} /> 
+                            {/* <Route path="/stu/index" component={StudentXt} />  */}
                             
-                            <Route exact component={NoMatch} />
+                            <Route exact component={StudentXt} />
                             </Switch>
                         </Student>
                     } />
