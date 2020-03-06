@@ -6,6 +6,7 @@ import (
 	"byxt/admin/pkg/code"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 //获取学生所有可以选择的题目
@@ -28,5 +29,25 @@ func GetStudentXtStatus(c *gin.Context) {
 	} else {
 		res, codes := common.Stu_GetAllXt(data[4])
 		code.R(http.StatusOK, codes, res, c)
+	}
+}
+
+//学生选题
+func StudentSelectXt(c *gin.Context) {
+
+	token := c.Request.Header.Get("token")
+	if data, err := redis.GetUserRedisInfo(token); err != nil {
+		code.R(http.StatusOK, code.TOKEN_TIME_OUT, data, c)
+	} else {
+		id,err:=strconv.Atoi(c.Param("id"))
+		var codes int
+		if err != nil {
+			codes = code.REQUEST_PARMS_ERROR
+		} else {
+			stuId,_:=strconv.Atoi(data[5])
+			codes = common.StudentXt(stuId, id, data[4])
+		}
+
+		code.R(http.StatusOK, codes, "", c)
 	}
 }

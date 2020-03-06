@@ -81,9 +81,9 @@ r.GET("/api/getPublicSecret", controllers.GetPublicPem)
 
 	stu := r.Group("api/stu")
 	{
-		stu.GET("getRoutesList")
 		stu.GET("/xt", student.GetAllXtList)
 		stu.GET("/xt/status")
+		stu.PUT("/xt/:id", student.StudentSelectXt)
 	}
 
 	tea := r.Group("api/tea")
