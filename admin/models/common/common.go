@@ -14,13 +14,11 @@ type GetXtList struct {
 	Describe 	string `json:"describe"`
 	Status 		string `json:"status"`
 	TeacherName string `json:"teacher_name"`
+	Key			int 	`json:"key"`
 }
-
 
 //学生获取所有选题(这个地方需要缓存)
 func Stu_GetAllXt(year string) ([]GetXtList, int) {
-
-
 	codes := code.SUCCESS
 	var data []GetXtList
 	if err := mysql.Db.Raw("call STU_GET_XT(?)", year).Scan(&data); err.Error != nil {

@@ -41,14 +41,15 @@ func StudentSelectXt(c *gin.Context) {
 	} else {
 		id,err:=strconv.Atoi(c.Param("id"))
 		var codes, num int
+		var msg string
 		if err != nil {
 			codes = code.REQUEST_PARMS_ERROR
 		} else {
 			stuId,_:=strconv.Atoi(data[5])
-			codes, num = common.StudentXt(stuId, id, data[4])
+			codes, num, msg = common.StudentXt(stuId, id, data[4])
 		}
 
-		code.R(http.StatusOK, codes, map[string]interface{}{"num": num}, c)
+		code.R(http.StatusOK, codes, map[string]interface{}{"num": num, "msg":msg}, c)
 	}
 }
 //学生获取自己的选题
@@ -60,5 +61,22 @@ func StudentGetXtSelf(c *gin.Context) {
 		stuId,_:=strconv.Atoi(data[5])
 		cdoes, data := common.StudentGetSelfXt(stuId, data[4])
 		code.R(http.StatusOK, cdoes, data, c)
+	}
+}
+
+//学生删除选题
+func StudentDeleteXt(c *gin.Context) {
+	token := c.Request.Header.Get("token")
+	if data, err := redis.GetUserRedisInfo(token); err != nil {
+		code.R(http.StatusOK, code.TOKEN_TIME_OUT, data, c)
+	} else {
+		xtId,err :=strconv.Atoi(c.Param("id"))
+		if err != nil {
+			code.R(http.StatusOK, code.REQUEST_PARMS_ERROR, "", c)
+		} else {
+			stuId,_:=strconv.Atoi(data[5])
+			codes, msg := common.StudentDeleteXt(stuId, xtId, data[4])
+			code.R(http.StatusOK, codes, map[string]interface{}{"msg":msg}, c)
+		}
 	}
 }

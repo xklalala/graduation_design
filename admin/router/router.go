@@ -85,6 +85,7 @@ r.GET("/api/getPublicSecret", controllers.GetPublicPem)
 		stu.GET("/xt/status")
 		stu.PUT("/xt/:id", student.StudentSelectXt)
 		stu.GET("/xt/self", student.StudentGetXtSelf)
+		stu.DELETE("/xt/:id", student.StudentDeleteXt)
 	}
 
 	tea := r.Group("api/tea")
