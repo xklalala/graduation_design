@@ -78,6 +78,7 @@ func TeacherMultipleAdd(c *gin.Context) {
 	filename, err, codes := upfile.Upfile(c)
 	if err != nil {
 		//上传文件出错
+		fmt.Println("文件出错")
 		code.R(http.StatusOK, codes, "", c)
 		return
 

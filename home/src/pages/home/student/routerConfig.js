@@ -10,8 +10,8 @@ export default [
         icon: 'info',
     },
     {
-        title: "选题管理",
-        key: '/stu/setItem',
+        title: "我的选题",
+        key: '/stu/xt',
         icon: 'setting'
     },
     {

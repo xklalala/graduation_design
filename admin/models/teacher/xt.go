@@ -10,7 +10,7 @@ import (
 type XtMain struct {
 	Id 			int    `json:"id"`
 	Title 		string `json:"title"`
-	TeacherId   string `json:"teacher_id"`
+	TeacherId   int `json:"teacher_id"`
 	Hard 		string `json:"hard"`
 	StudentId 	string `json:"student_id"`
 	XtType 		string `json:"xt_type"`
@@ -19,7 +19,7 @@ type XtMain struct {
 	status 		string `json:"status"`
 }
 //新增
-func TeaM_AddXt(parms request_struct.Teacher_add_xt, year, teacher_id string) int {
+func TeaM_AddXt(parms request_struct.Teacher_add_xt, year string, teacher_id int) int {
 	if len(year) < 4 {
 		return code.REQUEST_PARMS_ERROR
 	}
@@ -55,7 +55,7 @@ func TeaM_Update(parms request_struct.Teacher_add_xt) int {
 }
 
 //删除
-func TeaM_XtDelete(id int, tea_id string) int {
+func TeaM_XtDelete(id, tea_id int) int {
 	if err := mysql.Db.Where("id = ? AND teacher_id = ?", id, tea_id).Delete(XtMain{}); err.Error != nil {
 		return code.ERROR
 	} else {
@@ -63,7 +63,7 @@ func TeaM_XtDelete(id int, tea_id string) int {
 	}
 }
 //获取所有信息
-func TeaM_XtGetAll(year, tea_id string) (int, []XtMain) {
+func TeaM_XtGetAll(year string, tea_id int) (int, []XtMain) {
 	var data []XtMain
 	if err:= mysql.Db.Select("id, title, hard, student_id, xt_type, `describe`, status").Where("year = ? AND teacher_id = ?", year, tea_id).Find(&data); err.Error != nil {
 		return code.ERROR, []XtMain{}

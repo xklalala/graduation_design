@@ -2,7 +2,8 @@ import React from 'react'
 import Axios from 'axios'
 import MConfig from '../../../config'
 import getFormdata from '../../../public/js/getFormData'
-import {Tag, Table, Row, Input, Col, Select} from 'antd'
+import { SmileOutlined } from '@ant-design/icons';
+import {Drawer, Table, Row, Input, Col, Select, notification} from 'antd'
   const { Option } = Select;
 
 
@@ -11,7 +12,9 @@ class XtuXt extends React.Component {
         searchCondition: [],
 		data:null,
 		search: false,
-		origin:null
+		origin:null,
+		visible: false,
+		draw:{}
     }
     search_hard = (value) => {
       let search_arr  = []
@@ -32,7 +35,6 @@ class XtuXt extends React.Component {
             MConfig.request_url + '/stu/xt', 
         )
         .then(function (response) {
-            console.log(response.data)
             if (response.data.code === 10001) {
               _this.setState({
 				data:response.data.data,
@@ -44,7 +46,6 @@ class XtuXt extends React.Component {
             }
         })
         .catch(function (error) {
-            console.log(error);
         })
 	}
 	
@@ -59,7 +60,6 @@ class XtuXt extends React.Component {
 	}
 
     search_question = ( event) => {
-        console.log(event.target.value)
 		let _searchCondition = this.state.searchCondition
 		_searchCondition.title = event.target.value
         this.setState({
@@ -94,15 +94,10 @@ class XtuXt extends React.Component {
 	//条件筛选
 	preparationCondition = () => {
 		if(this.isSearch()) {//如果需要搜索
-			console.log(this.state.searchCondition)
-			console.log("issearch")
-			console.log(this.isSearch())
 			let condition = this.state.searchCondition
 			let _data = this.state.origin
-			// console.log(_data)
 			let result = []
 			//   1. 标题搜索
-			console.log(condition)
 			if (!this.isEmpty(condition.title)) {
 				
 				var reg = new RegExp(condition.title)
@@ -161,7 +156,6 @@ class XtuXt extends React.Component {
 				data: origin
 			})
 		}
-		// console.log(result)
 	}
 	isEmpty = (obj) => {
 		if(typeof obj == "undefined" || obj == null || obj == ""){
@@ -177,25 +171,52 @@ class XtuXt extends React.Component {
             MConfig.request_url + '/stu/xt/'+id, 
         )
         .then(function (response) {
-            console.log(response.data)
             if (response.data.code === 10001) {
-             
-				
+				_this.openNotification(response.data.data.num)
             } else {
               
             }
         })
         .catch(function (error) {
-            console.log(error);
         })
 	}
+	//提示框
+	openNotification = (n) => {
+		notification.config({
+			duration: 2,
+		  });
+		notification.open({
+			message:
+			'预选共可以选择三个选题， 你已经选择了'+n+'个选题',
+			icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+		});
+	  };
+
+	  showDrawer = (record) => {
+		this.setState({
+		  visible: true,
+		  draw:record
+		});
+	  };
+	
+	  onClose = () => {
+		this.setState({
+		  visible: false,
+		});
+	  };
+	
+	  onChange = e => {
+		this.setState({
+		  placement: e.target.value,
+		});
+	  };
     render() {
 		const columns = [
 			{
 			  title: '选题',
 			  dataIndex: 'title',
 			  key: 'title',
-			  render: text => <a>{text}</a>,
+			render: (text, record)=><a onClick={()=>this.showDrawer(record)}>{text}</a>
 			},
 			{
 			  title: '类型',
@@ -228,7 +249,7 @@ class XtuXt extends React.Component {
 			  // ),
 			},
 			{
-			  title: 'Action',
+			  title: '操作',
 			  key: 'action',
 			  render: (text) => (
 				<span>
@@ -240,6 +261,18 @@ class XtuXt extends React.Component {
         const children = [];
         return (
             <div>
+				<Drawer
+				title={this.state.draw.title}
+				placement={this.state.placement}
+				closable={false}
+				onClose={this.onClose}
+				visible={this.state.visible}
+				>
+				<p><b>类型：	</b>{this.state.draw.xt_type}</p>
+				<p><b>难度：	</b>{this.state.draw.hard}</p>
+				<p><b>出题人：</b>{this.state.draw.teacher_name}</p>
+				<p><b>描述：    </b>{this.state.draw.describe}</p>
+				</Drawer>
                 <Row>
                     <Col span={5}>
                     <Input 

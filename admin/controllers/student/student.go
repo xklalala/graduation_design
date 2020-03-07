@@ -40,14 +40,25 @@ func StudentSelectXt(c *gin.Context) {
 		code.R(http.StatusOK, code.TOKEN_TIME_OUT, data, c)
 	} else {
 		id,err:=strconv.Atoi(c.Param("id"))
-		var codes int
+		var codes, num int
 		if err != nil {
 			codes = code.REQUEST_PARMS_ERROR
 		} else {
 			stuId,_:=strconv.Atoi(data[5])
-			codes = common.StudentXt(stuId, id, data[4])
+			codes, num = common.StudentXt(stuId, id, data[4])
 		}
 
-		code.R(http.StatusOK, codes, "", c)
+		code.R(http.StatusOK, codes, map[string]interface{}{"num": num}, c)
+	}
+}
+//学生获取自己的选题
+func StudentGetXtSelf(c *gin.Context) {
+	token := c.Request.Header.Get("token")
+	if data, err := redis.GetUserRedisInfo(token); err != nil {
+		code.R(http.StatusOK, code.TOKEN_TIME_OUT, data, c)
+	} else {
+		stuId,_:=strconv.Atoi(data[5])
+		cdoes, data := common.StudentGetSelfXt(stuId, data[4])
+		code.R(http.StatusOK, cdoes, data, c)
 	}
 }

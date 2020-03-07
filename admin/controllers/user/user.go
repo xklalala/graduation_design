@@ -75,7 +75,7 @@ func Login(c *gin.Context) {
 			token = hex.EncodeToString(h.Sum(nil))
 
 			//缓存数据    身份|-|登陆ip|-|用户id|-|10位时间戳|-|毕业届（教室管理员默认为0）|-|id
-			cacheData := login.Type + "|-|" + c.ClientIP() + "|-|" + user_real_name + "|-|" + strconv.FormatInt(time.Now().Unix(), 10) + "|-|" + strconv.FormatInt(int64(by_year), 10) + "|-|" + strconv.Itoa(id)
+			cacheData := login.Type + "|-|" + c.ClientIP() + "|-|" + username + "|-|" + strconv.FormatInt(time.Now().Unix(), 10) + "|-|" + strconv.FormatInt(int64(by_year), 10) + "|-|" + strconv.Itoa(id)
 			fmt.Println(cacheData)
 			err := redis.Set(token, cacheData, int(time.Second*30))
 			if err != nil {

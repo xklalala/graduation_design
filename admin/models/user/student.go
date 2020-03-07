@@ -53,7 +53,7 @@ func StuLogin(username, password string) (int, string, int, int) {
 				fmt.Println("存在")
 				return code.USER_USER_OR_PWD_FALSE, "", 0, 0
 			} else {
-				return code.USER_LOGIN_SUCCESS, students.StudentId, now_year, students.Id
+				return code.USER_LOGIN_SUCCESS, students.StudentName, now_year, students.Id
 			}
 		}
 	}
@@ -81,10 +81,12 @@ func StuLogin(username, password string) (int, string, int, int) {
 			} else {
 				status = code.USER_LOGIN_SUCCESS
 			}
+		} else {
+			return code.USER_USER_NOT_EXIST, "", 0, 0
 		}
 	}
 
-	return status, students.StudentId, year_int, students.Id
+	return status, students.StudentName, year_int, students.Id
 }
 
 //修改密码

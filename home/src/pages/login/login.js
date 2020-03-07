@@ -69,6 +69,7 @@ class Login extends React.Component {
                             data
                         )
                         .then(function (response) {
+                            // console.log(response.data.data)
                             if (response.data.code === 20005) {
                                 self.login_success()
                                 localStorage.setItem("token", response.data.data.token)

@@ -31,7 +31,7 @@ func TeacherLogin(username, password string) (int, string, int) {
 		return code.USER_USER_OR_PWD_FALSE, "", 0
 	}
 	fmt.Println(teacher.Id)
-	return code.USER_LOGIN_SUCCESS, username, teacher.Id
+	return code.USER_LOGIN_SUCCESS, teacher.TeacherName, teacher.Id
 }
 
 //修改密码
