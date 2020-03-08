@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import { Button, Row, Col, Card, Modal, Form, Input, Select , Popconfirm, message} from 'antd'
+import { Button, Row, Col, Card, Modal, Form, Input, Select , Popconfirm, message, Drawer} from 'antd'
 import MConfig from '../../../config'
 import getFormdata from '../../../public/js/getFormData'
 import Axios from 'axios'
@@ -11,6 +11,7 @@ class XtDetail extends React.Component {
         data: null,
         visible: false,
         editVisible:false,
+        drawVisible:false,
         tempdata: {
             title:"",
             xt_type:"应用实践",
@@ -88,6 +89,17 @@ class XtDetail extends React.Component {
             tempdata: _data
         })
     }
+    showDrawer = () => {
+        this.setState({
+          drawVisible: true,
+        });
+      };
+    
+      DrawClose = () => {
+        this.setState({
+          drawVisible: false,
+        });
+      };
     showCard = () => {
         let card = []
         let _data = this.state.data
@@ -102,7 +114,7 @@ class XtDetail extends React.Component {
                                         <span>
                                             <a onClick={()=>this.edit(_data[i].id, i)}>修改</a> |  
                                         <Popconfirm
-                                        title="你确定要删除这个选题吗（当确定学生后无法删除）?"
+                                        title="你确定要删除这个选题吗（当有学生选择后无法删除）?"
                                         onConfirm={ () =>this.confirm(_data[i].id, i)}
                                         onCancel={this.cancel}
                                         okText="是"
@@ -112,9 +124,10 @@ class XtDetail extends React.Component {
                                         </Popconfirm>
                                         </span>
                                         } style={{ width: 300 }}>
+                                            {console.log(_data[i].status )}
                             <p><b>选题类型：</b>{_data[i].xt_type}</p>
                             <p><b>选题难度：</b>{_data[i].hard}</p>
-                            <p><b>选题学生：</b>{_data[i].student}</p>
+                            <p><b>选题学生：</b>{_data[i].status ==="0"?<a onClick={()=>this.showDrawer()}>待选择（点击查看）</a>:_data[i].student}</p>
                             {/* <p><b>选题状态：</b>{_data[i].status==="0"?"未选择":"已经选择"}</p> */}
                             <p><b>选题描述：</b>{_data[i].describe}</p>
                         </Card>
@@ -182,6 +195,17 @@ class XtDetail extends React.Component {
         const { getFieldDecorator } = this.props.form;
         return (
             <div>
+                 <Drawer
+                    title="Basic Drawer"
+                    placement="right"
+                    closable={false}
+                    onClose={this.DrawClose}
+                    visible={this.state.drawVisible}
+                    >
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
+                </Drawer>
                 <Modal
                     visible={this.state.editVisible}
                     onOk={this.editHandleOk}

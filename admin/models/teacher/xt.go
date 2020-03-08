@@ -16,13 +16,26 @@ type XtMain struct {
 	XtType 		string `json:"xt_type"`
 	Describe 	string `json:"describe"`
 	Year 		string `json:"year"`
-	status 		string `json:"status"`
+	Status 		string `json:"status"`
 }
+
+//判度年份是否存在
+type Year_Is_Exist struct{
+	Status int `json:"status"`
+}
+
 //新增
 func TeaM_AddXt(parms request_struct.Teacher_add_xt, year string, teacher_id int) int {
-	if len(year) < 4 {
-		return code.REQUEST_PARMS_ERROR
+	var flag Year_Is_Exist
+	if err := mysql.Db.Raw("call Year_Is_Exit(?)", year).Scan(&flag); err != nil {
+		return code.ERROR
+	} else {
+		if flag.Status == 0 {
+			return code.ERROR
+		}
 	}
+
+
 	xtmain := XtMain{
 		Title:     parms.Title,
 		Hard:      parms.Hard,
