@@ -37,6 +37,9 @@ func TeaC_AddXt(c *gin.Context) {
 	} else {
 		token := c.Request.Header.Get("token")
 		data,_ := redis.GetUserRedisInfo(token)
+		if len(data) < 5 {
+			codes = code.TOKEN_TIME_OUT
+		}
 		teacher_id, _ := strconv.Atoi(data[5])
 		codes = teacher.TeaM_AddXt(parms, c.Param("year"), teacher_id)
 	}
@@ -73,7 +76,18 @@ func TeaC_DeleteXt(c *gin.Context) {
 func TeaC_GetXt(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	data,_ := redis.GetUserRedisInfo(token)
+	if len(data) < 5 {
+		code.R(http.StatusOK, code.TOKEN_TIME_OUT, "", c)
+		return
+	}
 	teacher_id, _ := strconv.Atoi(data[5])
 	codes, res := teacher.TeaM_XtGetAll(c.Param("year"), teacher_id)
 	code.R(http.StatusOK, codes, res, c)
+}
+
+//教师获取选了选题的学生列表
+func TeaC_GetXt_Stu_List(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	year := c.Param("year")
+
 }

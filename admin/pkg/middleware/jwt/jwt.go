@@ -47,7 +47,7 @@ func JWT(auth string) gin.HandlerFunc {
 		times,_ := strconv.ParseInt(data[3], 10, 64)
 		if time.Now().Unix() - times > 25*60 {
 			//缓存数据    身份|-|登陆ip|-|用户id|-|10位时间戳
-			cacheData := data[0] + "|-|" + data[1] + "|-|" + data[2] + "|-|" + strconv.FormatInt(time.Now().Unix(), 10)
+			cacheData := data[0] + "|-|" + data[1] + "|-|" + data[2] + "|-|" + strconv.FormatInt(time.Now().Unix(), 10) + "|-|" + data[4] + "|-|"+data[5]
 			redis.Set(token, cacheData, int(time.Second*30))
 		}
 		c.Next()

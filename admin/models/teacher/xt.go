@@ -84,3 +84,7 @@ func TeaM_XtGetAll(year string, tea_id int) (int, []XtMain) {
 	return code.SUCCESS, data
 }
 
+//教师获取当前选题下的学生列表
+func TeaM_GetSelectStu(id int, yaer string) {
+
+}

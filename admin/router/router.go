@@ -108,6 +108,8 @@ r.GET("/api/getPublicSecret", controllers.GetPublicPem)
 		tea.DELETE("/xt/:id", teacher.TeaC_DeleteXt)
 		//教师获取自己的选题
 		tea.GET("/xt/:year", teacher.TeaC_GetXt)
+		//教师获取选了选题的学生列表
+		tea.GET("/xt/:year/:id", teacher.TeaC_GetXt_Stu_List)
 	}
 	return r
 }
