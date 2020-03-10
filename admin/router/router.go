@@ -110,6 +110,8 @@ r.GET("/api/getPublicSecret", controllers.GetPublicPem)
 		tea.GET("/xt/:year", teacher.TeaC_GetXt)
 		//教师获取选了选题的学生列表
 		tea.GET("/xt/:year/:id", teacher.TeaC_GetXt_Stu_List)
+		//教师选择学生
+		tea.POST("/selectStu", teacher.TeaC_Select_Stu)
 	}
 	return r
 }

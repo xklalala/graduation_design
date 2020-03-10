@@ -17,6 +17,7 @@ var msgFlags = map[int]string{
 	USER_LOGIN_SUCCESS:			"登陆成功",
 	SYSTEM_CLOSE:				"对不起，系统已经关闭或在用户不存在, 无法进入系统",
 	REQUEST_PARMS_ERROR:		"请求参数错误",
+	SELF_DEFIND_MESSAGE:		"自定义错误",
 
 	TOKEN_ERROR:				"身份信息错误，请重新登录",
 	TOKEN_TIME_OUT:				"身份信息超时， 请重新登录",
@@ -26,6 +27,7 @@ var msgFlags = map[int]string{
 	UPFILE_ERROR:				"上传文件出错",
 	UPFILE_FILE_TYPE_ERROR:		"文件类型错误",
 	UPFILE_FILE_SIZE_BIG:		"文件太大",
+
 }
 
 func GetMsg(code int) string {

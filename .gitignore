@@ -1,7 +1,7 @@
 *.docx
-*.sql
 *.exe
 *.log
 *.idea
 *.csv
 *.xlsx
+*.pem

@@ -56,3 +56,9 @@ type Teacher_add_xt struct {
 	Hard 	 string `form:"hard" binding:"required"`
 	Describe string `form:"describe"`
 }
+
+//教师选择学生
+type Teacher_Select_Stu struct {
+	Id 	 int `form:"id" binding:"required"`
+	XtId int `form:"xt_id" binding:"required"`
+}

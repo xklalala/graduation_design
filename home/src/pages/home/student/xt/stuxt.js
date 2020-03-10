@@ -76,6 +76,8 @@ class StuXt extends React.Component {
                             <p><b>选题类型：</b>{_data[i].xt_type}</p>
                             <p><b>选题难度：</b>{_data[i].hard}</p>
                             <p><b>出题教师：</b>{_data[i].teacher_name}</p>
+                            {_data[i].status==="1"?<p><b>手机号：</b>{_data[i].phone_number}</p>:""}
+                            {_data[i].status==="1"?<p><b>其它联系方式：</b>{_data[i].another_contact}</p>:""}
                             <p><b>选题状态：</b>{_data[i].status==="0"?<Tag color="volcano" key="未确定">未确定</Tag>:<Tag color="green" key="已确定">已确定</Tag>}</p>
                             <p><b>选题描述：</b>{_data[i].describe}</p>
             </Card>

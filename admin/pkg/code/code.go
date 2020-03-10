@@ -9,6 +9,8 @@ const (
 	SERVER_ERROR			= 10006		//服务器错误
 	REQUEST_PARMS_ERROR     = 10007		//请求参数错误
 
+	SELF_DEFIND_MESSAGE		= 10008     //自定义错误信息
+
 
 	USER_PARAMS_NOT_NULL 	= 20001 	//账号或者密码为空
 	USER_USER_NOT_EXIST 	= 20002 	//账号不存在

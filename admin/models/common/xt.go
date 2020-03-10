@@ -6,28 +6,33 @@ import (
 )
 
 type Msg struct {
-	Msg 	string  `json:"msg"`
-	Num 	int `json:"num"`
-	Codes 	int 	`json:"codes"`
+	Num 			int    `json:"num"`
+	Codes 			int    `json:"codes"`
+	Msg 			string `json:"msg"`
+
 }
+//选题列表
 type XtList struct {
-	Id 			int 		`json:"id"`
-	Student_id 	int 		`json:"student_id"`
-	Teacher_id 	int 		`json:"teacher_id"`
-	XtId 		int 		`json:"xt_id"`
-	Status 		string 		`json:"status"`
+	Id 				int    `json:"id"`
+	Student_id 		int	   `json:"student_id"`
+	Teacher_id 		int	   `json:"teacher_id"`
+	XtId 			int	   `json:"xt_id"`
+	Status 			string `json:"status"`
 }
 
 //学生查询自己的选题信息
 type StudentSelfXt struct {
-	Id 			int    `json:"id"`
-	Title 		string `json:"title"`
-	Hard 		string `json:"hard"`
-	XtType 		string `json:"xt_type"`
-	Describe 	string `json:"describe"`
-	TeacherName string `json:"teacher_name"`
-	Status		string `json:"status"`
+	Id 				int    `json:"id"`
+	Title 			string `json:"title"`
+	Hard 			string `json:"hard"`
+	XtType 			string `json:"xt_type"`
+	Describe 		string `json:"describe"`
+	TeacherName 	string `json:"teacher_name"`
+	Status			string `json:"status"`
+	PhoneNumber 	string `json:"phone_number"`
+	AnotherContact 	string `json:"another_contact"`
 }
+
 
 //学生获取所有选题
 func StudentXt(stuId, xtId int, year string) (int, int, string) {

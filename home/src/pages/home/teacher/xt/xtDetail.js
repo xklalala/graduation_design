@@ -1,17 +1,27 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import { Button, Row, Col, Card, Modal, Form, Input, Select , Popconfirm, message} from 'antd'
+import { Button, Row, Col, Card, Modal, Form, Input, Select , Popconfirm, message, Table} from 'antd'
 import MConfig from '../../../config'
 import getFormdata from '../../../public/js/getFormData'
 import Axios from 'axios'
 const { TextArea } = Input
 
+  
 class XtDetail extends React.Component {
     state = {
         data: null,
         visible: false,
         editVisible:false,
         selectStudentVisible:false,
+        StuInfoVisible: false,
+        selectStuList:null,
+        StuInfo: {
+            name: "",
+            id: "",
+            cname: "",
+            phone: "",
+            another: ""
+        },
         tempdata: {
             title:"",
             xt_type:"应用实践",
@@ -38,14 +48,15 @@ class XtDetail extends React.Component {
                 _this.setState({
                     data:_data
                 })
-            } else {
+            } else if (response.data.code === 10008) {
+                _this.sys_error(response.data.data.msg)
+            }else {
                 _this.sys_error("网络错误，请重试")
             }
         })
         .catch(function (error) {
                 console.log(error);
         }) 
-
     }
     cancel = (e) => {
         console.log(e);
@@ -58,6 +69,7 @@ class XtDetail extends React.Component {
         Axios.get(MConfig.request_url + '/tea/xt/'+this.props.match.params.year, )
         .then(function (response) {
             console.log(response.data)
+
             if (response.data.code === 10001) {
                 let res  = []
                 for(let i in response.data.data) {
@@ -66,7 +78,8 @@ class XtDetail extends React.Component {
                 _this.setState({
                     data: res
                 })
-            } else {
+            }
+             else {
                 _this.sys_error("网络错误，请重试")
             }
         })
@@ -94,7 +107,28 @@ class XtDetail extends React.Component {
             selectStudentVisible:false
         })
     }
-    selectStu_show =  () => {
+    selectStu_show =  (id) => {
+        console.log(id)
+        let _this = this
+
+        Axios.defaults.headers.common["token"] = localStorage.getItem("token");
+        Axios.get(MConfig.request_url + '/tea/xt/'+this.props.match.params.year+'/'+id, )
+        .then(function (response) {
+            console.log(response.data)
+            if (response.data.code === 10001) {
+                _this.setState({
+                    selectStuList:response.data.data
+                })
+            } else {
+                _this.sys_error("网络错误，请重试")
+            }
+        })
+        .catch(function (error) {
+                console.log(error);
+        }) 
+
+
+
         this.setState({
             selectStudentVisible:true
         })
@@ -102,6 +136,21 @@ class XtDetail extends React.Component {
     selectStu_handleCancel = () => {
         this.setState({
             selectStudentVisible:false
+        })
+    }
+    showStuInfo = (i) => {
+        let _data = this.state.data
+        console.log(_data[i])
+        let stuinfo = {
+            name: _data[i].student_name,
+            id: _data[i].student_id,
+            cname: _data[i].student_class_name,
+            phone: _data[i].phone,
+            another: _data[i].another_contact
+        }
+        this.setState({
+            StuInfoVisible:true,
+            StuInfo: stuinfo
         })
     }
     showCard = () => {
@@ -131,8 +180,7 @@ class XtDetail extends React.Component {
                                             {console.log(_data[i].status )}
                             <p><b>选题类型：</b>{_data[i].xt_type}</p>
                             <p><b>选题难度：</b>{_data[i].hard}</p>
-                            <p><b>选题学生：</b>{_data[i].status ==="0"?<a onClick={()=>this.selectStu_show()}>待选择（点击查看）</a>:_data[i].student}</p>
-                            {/* <p><b>选题状态：</b>{_data[i].status==="0"?"未选择":"已经选择"}</p> */}
+                            <p><b>选题学生：</b>{_data[i].status ==="0"?<a onClick={()=>this.selectStu_show(_data[i].id)}>待选择（点击查看）</a>:<a onClick={()=>this.showStuInfo(i)}>{_data[i].student_name}</a>}</p>
                             <p><b>选题描述：</b>{_data[i].describe}</p>
                         </Card>
                         <br/>
@@ -194,20 +242,92 @@ class XtDetail extends React.Component {
             }
         });
     };
-
+    selectStu_confirm = (value) => {
+        console.log(value)
+        let _this = this
+        let send = getFormdata({
+            id: value.id,
+            xt_id: value.xt_id,
+        })
+        Axios.defaults.headers.common["token"] = localStorage.getItem("token");
+                Axios.post(
+                    MConfig.request_url + '/tea/selectStu', 
+                    send
+                )
+                .then(function (response) {
+                    console.log(response.data)
+                    if (response.data.code === 10001) {
+                        _this.sys_success("ok")
+                        setTimeout(() => {
+                            window.location.reload()
+                        }, 50);
+                    } else {
+                        _this.sys_error("网络错误，请重试")
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+    }
+    StuInfo_handleOk = () => {
+        this.setState({
+            StuInfoVisible: false
+        })
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
+        const columns = [
+            {
+              title: '姓名',
+              dataIndex: 'student_name',
+              key: 'student_name',
+            },
+            {
+              title: '班级',
+              dataIndex: 'student_class_name',
+              key: 'student_class_name',
+            },
+            {
+              title: '学号',
+              dataIndex: 'student_id',
+              key: 'student_id',
+            },
+            {
+              title: '操作',
+              key: 'action',
+              render: (text) => (
+                    <Popconfirm
+                        title="你确定要选择该学生吗？"
+                        onConfirm={()=>this.selectStu_confirm(text)}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                    <a href="#">选择</a>
+                </Popconfirm>
+              ),
+            },
+          ];
         return (
             <div>
                          <Modal
-                            title="Basic Modal"
+                            title="选择学生"
                             visible={this.state.selectStudentVisible}
                             onOk={this.selectStu_handleOk}
                             onCancel={this.selectStu_handleCancel}
                             >
-                            <p>Some contents...</p>
-                            <p>Some contents...</p>
-                            <p>Some contents...</p>
+                            <Table columns={columns} dataSource={this.state.selectStuList} />
+                        </Modal>
+                        <Modal
+                            title="学生信息"
+                            visible={this.state.StuInfoVisible}
+                            onOk={this.StuInfo_handleOk}
+                            onCancel={this.StuInfo_handleOk}
+                            >
+                            <p><b>姓名：</b>{this.state.StuInfo.name}</p>
+                            <p><b>班级：</b>{this.state.StuInfo.cname}</p>
+                            <p><b>学号：</b>{this.state.StuInfo.id}</p>
+                            <p><b>手机号：</b>{this.state.StuInfo.phone}</p>
+                            <p><b>其它联系方式：</b>{this.state.StuInfo.another}</p>
                         </Modal>
                 <Modal
                     visible={this.state.editVisible}

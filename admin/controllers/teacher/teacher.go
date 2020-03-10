@@ -59,6 +59,7 @@ func TeaC_UpdateXt(c *gin.Context) {
 //删除选题
 func TeaC_DeleteXt(c *gin.Context) {
 	var codes int = code.SUCCESS
+	var msg string = ""
 	id, err := strconv.Atoi(c.Param("id"))
 
 	if err != nil {
@@ -67,19 +68,15 @@ func TeaC_DeleteXt(c *gin.Context) {
 		token := c.Request.Header.Get("token")
 		data,_ := redis.GetUserRedisInfo(token)
 		tea_id, _ := strconv.Atoi(data[5])
-		codes = teacher.TeaM_XtDelete(id, tea_id)
+		codes, msg = teacher.TeaM_XtDelete(id, tea_id)
 		fmt.Print(id)
 	}
-	code.R(http.StatusOK, codes, "", c)
+	code.R(http.StatusOK, codes, map[string]interface{}{"msg":msg}, c)
 }
 //获取自己的选题
 func TeaC_GetXt(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	data,_ := redis.GetUserRedisInfo(token)
-	if len(data) < 5 {
-		code.R(http.StatusOK, code.TOKEN_TIME_OUT, "", c)
-		return
-	}
 	teacher_id, _ := strconv.Atoi(data[5])
 	codes, res := teacher.TeaM_XtGetAll(c.Param("year"), teacher_id)
 	code.R(http.StatusOK, codes, res, c)
@@ -89,5 +86,18 @@ func TeaC_GetXt(c *gin.Context) {
 func TeaC_GetXt_Stu_List(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	year := c.Param("year")
+	codes, data := teacher.TeaM_GetSelectStu(id, year)
+	code.R(http.StatusOK, codes, data, c)
+}
 
+//教师选择学生
+func TeaC_Select_Stu(c *gin.Context) {
+	var data request_struct.Teacher_Select_Stu
+	var codes int = code.SUCCESS
+	if err := c.ShouldBind(&data); err != nil {
+		codes = code.ERROR
+	} else {
+		codes = teacher.TeaM_Select_Stu(data.Id, data.XtId)
+	}
+	code.R(http.StatusOK, codes, data, c)
 }
