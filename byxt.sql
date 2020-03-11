@@ -11,7 +11,7 @@
  Target Server Version : 50729
  File Encoding         : 65001
 
- Date: 10/03/2020 21:45:30
+ Date: 11/03/2020 19:24:19
 */
 
 SET NAMES utf8mb4;
@@ -98,7 +98,7 @@ CREATE TABLE `xtxt_user_students_2020` (
 -- Records of xtxt_user_students_2020
 -- ----------------------------
 BEGIN;
-INSERT INTO `xtxt_user_students_2020` VALUES (4, '201626203047', '徐凯', 'c9268cca058eede53b7728ebd602efb8', '16级网络工程2班', NULL, NULL);
+INSERT INTO `xtxt_user_students_2020` VALUES (4, '201626203047', '徐凯', 'c9268cca058eede53b7728ebd602efb8', '16级网络工程2班', '15070232051', '微信：xk2607780909');
 INSERT INTO `xtxt_user_students_2020` VALUES (5, '201626203048', '赖锟', 'c9268cca058eede53b7728ebd602efb8', '16级网络工程2班', NULL, NULL);
 INSERT INTO `xtxt_user_students_2020` VALUES (6, '201626203049', '肖荘林', 'c9268cca058eede53b7728ebd602efb8', '16级网络工程2班', NULL, NULL);
 INSERT INTO `xtxt_user_students_2020` VALUES (7, '201626203050', '龚圣茵', 'c9268cca058eede53b7728ebd602efb8', '16级网络工程2班', NULL, NULL);
@@ -209,7 +209,7 @@ INSERT INTO `xtxt_user_teacher` VALUES (3, '001058', '黄勤', 'c9268cca058eede5
 INSERT INTO `xtxt_user_teacher` VALUES (4, '001064', '王明文', 'c9268cca058eede53b7728ebd602efb8', '15070232051', NULL, '1');
 INSERT INTO `xtxt_user_teacher` VALUES (5, '001067', '周琪云', 'c9268cca058eede53b7728ebd602efb8', '15070232051', NULL, '1');
 INSERT INTO `xtxt_user_teacher` VALUES (6, '001071', '李云清', 'c9268cca058eede53b7728ebd602efb8', '15070232051', NULL, '1');
-INSERT INTO `xtxt_user_teacher` VALUES (7, '001073', '杨庆红', 'c9268cca058eede53b7728ebd602efb8', '15070232051', NULL, '1');
+INSERT INTO `xtxt_user_teacher` VALUES (7, '001073', '杨庆红', 'c9268cca058eede53b7728ebd602efb8', '15070232050', '微信：xk2607780909', '1');
 INSERT INTO `xtxt_user_teacher` VALUES (8, '001079', '谢旭升', 'c9268cca058eede53b7728ebd602efb8', '15070232051', NULL, '1');
 INSERT INTO `xtxt_user_teacher` VALUES (9, '001082', '张练兴', 'c9268cca058eede53b7728ebd602efb8', '15070232051', NULL, '1');
 INSERT INTO `xtxt_user_teacher` VALUES (10, '001311', '罗坚', 'c9268cca058eede53b7728ebd602efb8', '15070232051', NULL, '1');
@@ -326,7 +326,7 @@ CREATE TABLE `xtxt_xt_list` (
   PRIMARY KEY (`id`),
   KEY `teacher_id` (`teacher_id`) USING HASH,
   KEY `student_id` (`student_id`) USING HASH
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of xtxt_xt_list
@@ -354,7 +354,7 @@ CREATE TABLE `xtxt_xt_main` (
   `year` char(4) DEFAULT NULL,
   `status` char(1) DEFAULT '0' COMMENT '状态：0未选择 1 已经确定学生',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of xtxt_xt_main
@@ -363,9 +363,11 @@ BEGIN;
 INSERT INTO `xtxt_xt_main` VALUES (11, 1, '基于JAVA的袜子后台管理系统', '简单', '18', '理论研究', '啊啊啊', '2020', '1');
 INSERT INTO `xtxt_xt_main` VALUES (12, 1, '网上商城', '中等', '19', '理论研究', '人3任2人', '2020', '1');
 INSERT INTO `xtxt_xt_main` VALUES (13, 1, '毕业选题系统', '中等', '', '应用实践', '3242342', '2020', '0');
-INSERT INTO `xtxt_xt_main` VALUES (14, 7, '基于JAVA', '困难', '4', '理论研究', 'fewfawfaef', '2020', '1');
 INSERT INTO `xtxt_xt_main` VALUES (15, 19, '毕业选题系统', '简单', '4', '理论研究', '', '2020', '1');
 INSERT INTO `xtxt_xt_main` VALUES (16, 19, '2016keti', '中等', '5', '应用实践', '', '2020', '1');
+INSERT INTO `xtxt_xt_main` VALUES (17, 7, '网上商城', '中等', '', '理论研究', '21312313', '2020', '0');
+INSERT INTO `xtxt_xt_main` VALUES (18, 7, '毕业选题系统', '困难', '', '理论研究', '324234', '2020', '0');
+INSERT INTO `xtxt_xt_main` VALUES (19, 7, '毕业选题系统', '中等', '', '应用实践', '234234', '2020', '0');
 COMMIT;
 
 -- ----------------------------

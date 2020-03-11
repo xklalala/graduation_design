@@ -21,6 +21,12 @@ type Student struct {
 	Status          	string `json:"status"`
 	StudentName     	string `json:"student_name"`
 }
+type stuInfo struct {
+	PhoneNumber     	string `json:"phone_number"`
+	AnotherContact  	string `json:"another_contact"`
+	StudentClassName  	string `json:"class_name"`
+	StudentName     	string `json:"student_name"`
+}
 
 //学生登录 return 状态， student_id, 毕业届
 func StuLogin(username, password string) (int, string, int, int) {
@@ -90,9 +96,8 @@ func StuLogin(username, password string) (int, string, int, int) {
 }
 
 //修改密码
-func StuUpdatePwd(userId, oldPwd, newPwd string) int {
+func StuUpdatePwd(userId, oldPwd, newPwd string, year string) int {
 	var student Student
-	year := userId[0:4]
 	codes := code.SUCCESS
 
 	sql := fmt.Sprintf("SELECT student_password FROM xtxt_user_students_%s WHERE student_id = ? LIMIT 1", year)
@@ -198,4 +203,27 @@ func CreateTable(year int) int {
 		return code.ERROR
 	}
 	return code.SUCCESS
+}
+
+//获取学生信息
+func StuM_stu_get_self_info(id int, year string)(int, stuInfo) {
+	var sql string = "SELECT student_name, student_class_name, phone_number, another_contact FROM xtxt_user_students_" + year + "" +
+		" WHERE id = ?"
+	var student stuInfo
+	if err := mysql.Db.Raw(sql, id).Scan(&student); err.Error != nil {
+		return code.ERROR, student
+	}
+	return code.SUCCESS, student
+}
+
+//更新信息
+func StuM_update_info(info request_struct.StuInfo, year string, id int) int {
+	var sql string = "UPDATE xtxt_user_students_" + year + " " +
+		"SET student_name = ?, student_class_name = ?, phone_number = ?, another_contact = ? " +
+		" WHERE id = ?"
+	if err := mysql.Db.Exec(sql, info.StudentName, info.StudentClassName, info.PhoneNumber, info.AnotherContact, id); err.Error != nil {
+		return code.ERROR
+	}
+	return code.SUCCESS
+
 }

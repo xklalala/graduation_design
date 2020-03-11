@@ -62,3 +62,10 @@ type Teacher_Select_Stu struct {
 	Id 	 int `form:"id" binding:"required"`
 	XtId int `form:"xt_id" binding:"required"`
 }
+//学生更新信息
+type StuInfo struct {
+	PhoneNumber     	string `form:"phone" binding:"required"`
+	AnotherContact  	string `form:"anoContact" binding:"required"`
+	StudentClassName  	string `form:"stuCname" binding:"required"`
+	StudentName     	string `form:"stuName" binding:"required"`
+}

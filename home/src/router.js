@@ -20,6 +20,7 @@ import TeacherSetItemDetail from './pages/home/teacher/xt/xtDetail'
 import Student  from './pages/home/student/index/student'
 import StudentXt from './pages/home/student/xt/xt'
 import StuXt from './pages/home/student/xt/stuxt'
+import StuUser from './pages/home/student/user/index'
 class MyRouter extends React.Component {
     
     render() {
@@ -63,7 +64,9 @@ class MyRouter extends React.Component {
                         <Student>
                             <Switch>
                             <Route path="/teacher/editUserInfo" component={TeacherUser} /> 
+                            <Route path="/stu/user" component={StuUser} /> 
                             <Route path="/stu/xt" component={StuXt} /> 
+                            
                             {/* <Route path="/stu/index" component={StudentXt} />  */}
                             
                             <Route exact component={StudentXt} />

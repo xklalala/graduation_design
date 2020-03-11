@@ -81,11 +81,20 @@ r.GET("/api/getPublicSecret", controllers.GetPublicPem)
 
 	stu := r.Group("api/stu")
 	{
+		//获取选题列表
 		stu.GET("/xt", student.GetAllXtList)
 		stu.GET("/xt/status")
+		//学生选题
 		stu.PUT("/xt/:id", student.StudentSelectXt)
+		//学生获取自己的选题
 		stu.GET("/xt/self", student.StudentGetXtSelf)
+		//学生删除选题
 		stu.DELETE("/xt/:id", student.StudentDeleteXt)
+		//学生获取自己信息
+		stu.GET("/user", student.StuGetSelfInfo)
+		//学生更新个人信息
+		stu.POST("/user", student.StudentUpdateInfo)
+		stu.POST("/updatePwd", controllers.UpdatePwd)
 	}
 
 	tea := r.Group("api/tea")

@@ -58,10 +58,10 @@ class XtDetail extends React.Component {
                 console.log(error);
         }) 
     }
-    cancel = (e) => {
-        console.log(e);
-        message.error('Click on No');
-    }
+    // cancel = (e) => {
+    //     console.log(e);
+    //     message.error('Click on No');
+    // }
     componentDidMount() {
         let _this = this
 
@@ -169,7 +169,7 @@ class XtDetail extends React.Component {
                                         <Popconfirm
                                         title="你确定要删除这个选题吗（当有学生选择后无法删除）?"
                                         onConfirm={ () =>this.confirm(_data[i].id, i)}
-                                        onCancel={this.cancel}
+                                        // onCancel={this.cancel}
                                         okText="是"
                                         cancelText="否"
                                         >

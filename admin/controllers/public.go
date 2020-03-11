@@ -61,7 +61,7 @@ func UpdatePwd(c *gin.Context) {
 		//更新密码
 		switch info[0] {
 		case "stu":
-			codes = user.StuUpdatePwd(info[2], oldpwd, newpwd)
+			codes = user.StuUpdatePwd(info[2], oldpwd, newpwd, info[4])
 		case "tea":
 			codes = user.TeainUpdatePwd(info[2], oldpwd, newpwd)
 		case "adm":
