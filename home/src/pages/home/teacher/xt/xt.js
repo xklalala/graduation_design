@@ -22,7 +22,6 @@ componentDidMount() {
         MConfig.request_url + '/tea/getStuYearList', 
     )
     .then(function (response) {
-        console.log(response.data)
         if (response.data.code === 10001) {
             _this.setState({
                 data:response.data.data

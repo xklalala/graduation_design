@@ -19,7 +19,6 @@ class Student extends React.Component {
 	})
 }
   onCollapse = collapsed => {
-    console.log(collapsed);
     this.setState({ collapsed });
   };
 

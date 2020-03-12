@@ -122,11 +122,6 @@ class TeacherList extends React.Component {
     };
     //禁用或者启用
     disable_OR_enable = (checked,id, index) => {
-        
-        console.log(checked)
-        console.log(id)
-        console.log(index)
-        
         let _this = this
         let send = getFormdata({
             id:     id,
@@ -139,7 +134,6 @@ class TeacherList extends React.Component {
             send
         )
         .then(function (response) {
-            console.log(response.data)
             if (response.data.code === 10001) {
                 _this.sys_success("ok")
                 _data[index].status = checked===true?"1":"0"
@@ -159,13 +153,11 @@ class TeacherList extends React.Component {
     delete_teacher = (id, index) => {
         let _data = this.state.data
         let _this = this
-        console.log(id, index)
         Axios.defaults.headers.common["token"] = localStorage.getItem("token");
         Axios.get(
             MConfig.request_url + '/admin/delete/'+id,
         )
         .then(function (response) {
-            console.log(response)
             if (response.data.code === 10001) {
                 _this.sys_success("删除成功")
                 _data.splice(index, 1)

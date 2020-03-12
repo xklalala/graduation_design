@@ -36,7 +36,6 @@ class XtDetail extends React.Component {
         message.error(msg)
     }
     confirm = (id, index)=> {
-        console.log(id, index);
         let _data = this.state.data
         let _this = this
         Axios.defaults.headers.common["token"] = localStorage.getItem("token");
@@ -59,7 +58,6 @@ class XtDetail extends React.Component {
         }) 
     }
     // cancel = (e) => {
-    //     console.log(e);
     //     message.error('Click on No');
     // }
     componentDidMount() {
@@ -68,8 +66,6 @@ class XtDetail extends React.Component {
         Axios.defaults.headers.common["token"] = localStorage.getItem("token");
         Axios.get(MConfig.request_url + '/tea/xt/'+this.props.match.params.year, )
         .then(function (response) {
-            console.log(response.data)
-
             if (response.data.code === 10001) {
                 let res  = []
                 for(let i in response.data.data) {
@@ -94,8 +90,6 @@ class XtDetail extends React.Component {
 		this.setState({ editVisible: false });
     }
     edit = (id, index) => {
-        console.log("edit")
-        console.log(id)
         let _data = this.state.data[index]
         this.setState({
             editVisible:true,
@@ -108,13 +102,11 @@ class XtDetail extends React.Component {
         })
     }
     selectStu_show =  (id) => {
-        console.log(id)
         let _this = this
 
         Axios.defaults.headers.common["token"] = localStorage.getItem("token");
         Axios.get(MConfig.request_url + '/tea/xt/'+this.props.match.params.year+'/'+id, )
         .then(function (response) {
-            console.log(response.data)
             if (response.data.code === 10001) {
                 _this.setState({
                     selectStuList:response.data.data
@@ -140,7 +132,6 @@ class XtDetail extends React.Component {
     }
     showStuInfo = (i) => {
         let _data = this.state.data
-        console.log(_data[i])
         let stuinfo = {
             name: _data[i].student_name,
             id: _data[i].student_id,
@@ -177,7 +168,6 @@ class XtDetail extends React.Component {
                                         </Popconfirm>
                                         </span>
                                         } style={{ width: 300 }}>
-                                            {console.log(_data[i].status )}
                             <p><b>选题类型：</b>{_data[i].xt_type}</p>
                             <p><b>选题难度：</b>{_data[i].hard}</p>
                             <p><b>选题学生：</b>{_data[i].status ==="0"?<a onClick={()=>this.selectStu_show(_data[i].id)}>待选择（点击查看）</a>:<a onClick={()=>this.showStuInfo(i)}>{_data[i].student_name}</a>}</p>
@@ -196,9 +186,7 @@ class XtDetail extends React.Component {
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            console.log(values)
             if (!err) {
-                console.log("success")
                 let _this = this
                 let send = getFormdata({
                     title: values.title,
@@ -212,7 +200,6 @@ class XtDetail extends React.Component {
                     send
                 )
                 .then(function (response) {
-                    console.log(response.data)
                     if (response.data.code === 10001) {
                         _this.setState({
                             visible:false
@@ -233,7 +220,6 @@ class XtDetail extends React.Component {
         });
     };
     editHandleSubmit = e => {
-        console.log("editsubmit")
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             console.log(values)
@@ -243,7 +229,6 @@ class XtDetail extends React.Component {
         });
     };
     selectStu_confirm = (value) => {
-        console.log(value)
         let _this = this
         let send = getFormdata({
             id: value.id,
@@ -255,7 +240,6 @@ class XtDetail extends React.Component {
                     send
                 )
                 .then(function (response) {
-                    console.log(response.data)
                     if (response.data.code === 10001) {
                         _this.sys_success("ok")
                         setTimeout(() => {

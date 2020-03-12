@@ -15,7 +15,6 @@ class YearPanel extends React.Component {
         message.success(msg)
     }
     callback = (key)=> {
-        console.log(key);
     }
     
     componentDidMount() {
@@ -25,7 +24,6 @@ class YearPanel extends React.Component {
             MConfig.request_url + '/admin/getStuYearList', 
         )
         .then(function (response) {
-            console.log(response.data)
             if (response.data.code === 10001) {
                 _this.setState({
                     data:response.data.data
@@ -84,7 +82,6 @@ class YearPanel extends React.Component {
             send
         )
         .then(function (response) {
-            console.log(response.data)
             if (response.data.code === 10001) {
                 _this.sys_success("ok")
                 _this.setState({

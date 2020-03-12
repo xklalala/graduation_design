@@ -21,7 +21,6 @@ class StuXt extends React.Component {
           MConfig.request_url + '/stu/xt/self', 
       )
       .then(function (response) {
-          console.log(response.data.data)
           if (response.data.code === 10001) {
               _this.setState({
                   data: response.data.data
@@ -38,7 +37,6 @@ class StuXt extends React.Component {
         this.sys_error("对不起，选题已确定，无法删除！")
         return
       }
-    console.log(id, index);
     let _this = this
     Axios.defaults.headers.common["token"] = localStorage.getItem("token");
     Axios.delete(MConfig.request_url + '/stu/xt/'+id, )

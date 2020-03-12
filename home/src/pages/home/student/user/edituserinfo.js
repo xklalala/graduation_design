@@ -20,7 +20,6 @@ class EditUserInfo extends React.Component {
             MConfig.request_url + '/stu/user', 
         )
         .then(function (response) {
-            console.log(response.data)
             if (response.data.code === 10001) {
                 let _data = {
 					id	 : response.data.data.id,
@@ -52,7 +51,6 @@ class EditUserInfo extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-				console.log(values)
 				let _this = this
 				Axios.defaults.headers.common["token"] = localStorage.getItem("token");
 				let data = getFormdata({
@@ -66,7 +64,6 @@ class EditUserInfo extends React.Component {
 				data 
 			)
 			.then(function (response) {
-				console.log(response.data)
 				if (response.data.code === 10001) {
 					_this.sys_success("ok")
 				} else {

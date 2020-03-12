@@ -19,7 +19,6 @@ class EditPwd extends React.Component {
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 if(values.newPwd === values.oldPwd) {
-                    console.log(values.oldPwd)
                     this.sys_warning("新旧密码相同, 请重新输入新密码")
                 } else {
 
@@ -40,7 +39,6 @@ class EditPwd extends React.Component {
                         data
                     )
                     .then(function (response) {
-                        console.log(response.data)
                         if (response.data.code === 10001) {
                             self.sys_success("修改成功")
                             

@@ -19,7 +19,6 @@ class Student extends React.Component {
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            console.log(values)
             if (!err) {
 				let _this = this
 
@@ -28,15 +27,16 @@ class Student extends React.Component {
 					MConfig.request_url + '/admin/addStuYear/'+ values.year, 
                 )
                 .then(function (response) {
-                    console.log(response.data)
 					if (response.data.code === 10001) {
-						_this.sys_success("添加成功, 请刷新页面")
+                        _this.sys_success("添加成功, 请刷新页面")
+                        setTimeout(() => {
+                            window.location.reload()
+                        }, 50);
 					} else {
-						_this.sys_error("请检查教号是否重复")
+						_this.sys_error("请检查是否重复")
 					}
                 })
                 .catch(function (error) {
-                    console.log(error);
                 })
                 this.setState({ visible: false })
             } else {

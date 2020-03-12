@@ -174,7 +174,6 @@ class XtuXt extends React.Component {
             MConfig.request_url + '/stu/xt/'+id, 
         )
         .then(function (response) {
-			console.log(response.data)
             if (response.data.code === 10001) {
 				_this.openNotification(response.data.data.num)
             } else {

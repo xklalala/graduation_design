@@ -1,6 +1,7 @@
 import React from 'react'
 import Axios from 'axios'
 import {Form, Icon, Upload, Button, Row, Col, message, Input, Popconfirm, Table, Modal} from 'antd'
+import {Link} from 'react-router-dom'
 import Highlighter from 'react-highlight-words';
 import MConfig from '../../../config'
 import getFormdata from '../../../public/js/getFormData'
@@ -20,7 +21,6 @@ class StudentList extends React.Component {
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            console.log(values)
             
             if (!err) {
                 // 
@@ -140,7 +140,6 @@ class StudentList extends React.Component {
             MConfig.request_url + '/admin/getStuList/'+ this.props.match.params.year, 
         )
         .then(function (response) {
-            console.log(response.data)
             if (response.data.code === 10001) {
                 let result = new Array()
                 for (let key in response.data.data) {
@@ -176,7 +175,6 @@ class StudentList extends React.Component {
         )
     
         .then(function (response) {
-            console.log(response.data)
             if (response.data.code === 10001) {
                 _this.sys_success("ok")
                 _data.splice(index, 1)
@@ -335,9 +333,7 @@ class StudentList extends React.Component {
 			},
 			showUploadList:false,
 			onChange(info) {
-				console.log(info.file.response)
 				if(typeof(info.file.response) != "undefined") {
-					console.log(info.file.response)
 					if (info.file.response.code === 10001) {
 						_this.sys_success("添加成功, 请刷新页面");
 					}else {
@@ -350,6 +346,7 @@ class StudentList extends React.Component {
             
             <div>
                 <Row>学生总人数：{this.state.data.length} 人
+                <Button type="dashed"><Link to="/admin/user/stuuser">返回上一页</Link></Button>
                     </Row>
                     <br/>
                 <Modal

@@ -3,6 +3,7 @@ import App from './App'
 import Login from './pages/login/login'
 import { HashRouter, Route, Switch } from 'react-router-dom'
 import Admin from './pages/admin/admin'
+import AdminWelcome from './pages/admin/welcome'
 import Footer from './pages/login/footer/footer'
 import NoMatch from './pages/nomatch/nomatch'
 import SysConf from './pages/admin/sysconfig/sysconfig'
@@ -33,10 +34,11 @@ class MyRouter extends React.Component {
                     <Route path="/admin" render={()=>
                         <Admin>
                             <Switch>
+
+                            <Route path="/admin/welcome" component={AdminWelcome} />
                                 <Route exact path="/" component={SysConf} />
                                 {/* 系统设置 */}
                                 <Route path="/admin/sysconf" component={SysConf} />
-
                                 <Route path="/admin/adminuser" component={AdminUser} />
                                 {/* 用户信息 */}
                                 <Route path="/admin/editUserInfo" component={EditUserInfo} />

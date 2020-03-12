@@ -19,7 +19,6 @@ class TeacherAccount extends React.Component {
 	handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
-            console.log(values)
             if (!err) {
 				let _this = this
 				let publicSecritKey = localStorage.getItem("publicSecritKey")
@@ -132,7 +131,6 @@ class TeacherAccount extends React.Component {
             MConfig.request_url + '/admin/teacherExample.xlsx', 
 		)
 		.then(function (response){
-			console.log(response)
 		})
 		.finally(function(err){
 			console.log(err)
@@ -148,9 +146,7 @@ class TeacherAccount extends React.Component {
 			},
 			showUploadList:false,
 			onChange(info) {
-				console.log(info.file.response)
 				if(typeof(info.file.response) != "undefined") {
-					console.log(info.file.response)
 					if (info.file.response.code === 10001) {
 						_this.sys_success("添加成功, 请刷新页面");
 					}else {
