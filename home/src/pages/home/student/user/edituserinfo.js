@@ -93,7 +93,7 @@ class EditUserInfo extends React.Component {
               })(
                 <Input
                   type="text"
-                  placeholder="班级"
+                  placeholder="姓名"
                 />,
               )}
             </Form.Item>
@@ -106,7 +106,7 @@ class EditUserInfo extends React.Component {
               })(
                 <Input
                   type="text"
-                  placeholder="姓名"
+                  placeholder="班级"
                 />,
               )}
             </Form.Item>

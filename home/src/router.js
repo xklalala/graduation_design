@@ -34,7 +34,6 @@ class MyRouter extends React.Component {
                     <Route path="/admin" render={()=>
                         <Admin>
                             <Switch>
-
                             <Route path="/admin/welcome" component={AdminWelcome} />
                                 <Route exact path="/" component={SysConf} />
                                 {/* 系统设置 */}
@@ -75,11 +74,10 @@ class MyRouter extends React.Component {
                             </Switch>
                         </Student>
                     } />
-
-                    <Route path="/footer"  component={Footer} />
                 </App>
             </HashRouter>
         )
     }
 }
 export default MyRouter
+

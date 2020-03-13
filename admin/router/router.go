@@ -10,6 +10,7 @@ import (
 	"byxt/admin/pkg/middleware/jwt"
 	"byxt/admin/pkg/setting"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 //config set stop-writes-on-bgsave-error no
 func InitRouter() *gin.Engine {
@@ -24,6 +25,12 @@ func InitRouter() *gin.Engine {
 //获取公钥
 r.GET("/api/getPublicSecret", controllers.GetPublicPem)
 
+r.GET("/ping", func(context *gin.Context) {
+	context.JSON(http.StatusOK, gin.H{
+		"code":    200,
+		"message": "ok",
+	})
+})
 
 	user := r.Group("api/user:type")
 	{
@@ -55,7 +62,7 @@ r.GET("/api/getPublicSecret", controllers.GetPublicPem)
 		//修改教师账号
 		admin.POST("/editTeacher", admins.Admin_UpdateTeacher)
 		//删除账号
-		admin.GET("/delete/:id", admins.Admin_DeleteTeacher)
+		//admin.GET("/delete/:id", admins.Admin_DeleteTeacher)
 		//设置教师状态
 		admin.POST("/setStatus", admins.SetTeacherStatus)
 		//批量导入教师账号
@@ -73,7 +80,7 @@ r.GET("/api/getPublicSecret", controllers.GetPublicPem)
 		admin.POST("/multipleAddStu/:year", admins.Admin_MultipleAddStu)
 		//修改学生信息
 		admin.POST("/updateStu", admins.Admin_UpdateStu)
-		//设置学生账号状态
+		//删除学生
 		admin.DELETE("/studentDelete/:id/:year", admins.DeleteStudent)
 		//设置年份学生状态
 		admin.POST("/stuSetStatus", admins.SetStudentYearStatus)

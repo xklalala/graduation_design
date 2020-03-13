@@ -22,10 +22,13 @@ type UserTeacher struct {
 //教师登录
 func TeacherLogin(username, password string) (int, string, int) {
 	var teacher UserTeacher
-	err := mysql.Db.Select("id, teacher_password, teacher_name").Where("teacher_id = ?", username).First(&teacher)
+	err := mysql.Db.Select("id, teacher_password, teacher_name, teacher_status").Where("teacher_id = ?", username).First(&teacher)
 	if err.Error != nil {
 		mlog.Info(err.Error)
 		return code.USER_USER_NOT_EXIST, "", 0
+	}
+	if teacher.TeacherStatus == "0" {
+		return code.SYSTEM_CLOSE, "", 0
 	}
 	if teacher.TeacherPassword != password {
 		return code.USER_USER_OR_PWD_FALSE, "", 0

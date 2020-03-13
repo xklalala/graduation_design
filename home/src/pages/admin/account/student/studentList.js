@@ -175,6 +175,10 @@ class StudentList extends React.Component {
         )
     
         .then(function (response) {
+            if(response.data.code === 10008) {
+                _this.sys_error(response.data.data.msg)
+                return
+            }
             if (response.data.code === 10001) {
                 _this.sys_success("ok")
                 _data.splice(index, 1)

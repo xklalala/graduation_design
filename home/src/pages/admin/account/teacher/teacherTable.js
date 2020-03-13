@@ -376,7 +376,7 @@ class TeacherList extends React.Component {
                 key: 'cz',
                 render: (text, record, index) => 
                 <div>
-                    <Popconfirm
+                    {/* <Popconfirm
                         title="你确定要删除这个账号吗?"
                         onConfirm={()=>this.delete_teacher(record.key, index)}
                         onCancel={null}
@@ -389,7 +389,7 @@ class TeacherList extends React.Component {
                         >
                         删除
                     </Button>&nbsp;
-                    </Popconfirm>
+                    </Popconfirm> */}
                     <Button 
                         type="primary" 
                         ghost 

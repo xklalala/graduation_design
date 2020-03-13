@@ -11,7 +11,7 @@
  Target Server Version : 50729
  File Encoding         : 65001
 
- Date: 11/03/2020 19:24:19
+ Date: 13/03/2020 01:32:20
 */
 
 SET NAMES utf8mb4;
@@ -76,6 +76,28 @@ CREATE TABLE `xtxt_user_students_2016` (
 -- ----------------------------
 BEGIN;
 INSERT INTO `xtxt_user_students_2016` VALUES (1, '201226203047', '徐凯', 'c9268cca058eede53b7728ebd602efb8', '16级网络工程2班', NULL, NULL);
+COMMIT;
+
+-- ----------------------------
+-- Table structure for xtxt_user_students_2017
+-- ----------------------------
+DROP TABLE IF EXISTS `xtxt_user_students_2017`;
+CREATE TABLE `xtxt_user_students_2017` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `student_id` char(12) NOT NULL COMMENT '学生学号',
+  `student_name` varchar(36) DEFAULT NULL,
+  `student_password` varchar(255) NOT NULL DEFAULT 'c9268cca058eede53b7728ebd602efb8' COMMENT '密码默认为12345678',
+  `student_class_name` varchar(30) DEFAULT NULL COMMENT '班级',
+  `phone_number` varchar(11) DEFAULT NULL COMMENT '学生手机号',
+  `another_contact` varchar(128) DEFAULT NULL COMMENT '其它联系方式',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `stu_id` (`student_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='学生表,学生表这里根据年份自建  byxt_user_students_2020';
+
+-- ----------------------------
+-- Records of xtxt_user_students_2017
+-- ----------------------------
+BEGIN;
 COMMIT;
 
 -- ----------------------------
@@ -173,7 +195,7 @@ CREATE TABLE `xtxt_user_students_table` (
   `number` int(11) DEFAULT NULL,
   `status` enum('0','1') DEFAULT '1',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
 
 -- ----------------------------
 -- Records of xtxt_user_students_table
@@ -181,6 +203,7 @@ CREATE TABLE `xtxt_user_students_table` (
 BEGIN;
 INSERT INTO `xtxt_user_students_table` VALUES (13, '2016', 0, '1');
 INSERT INTO `xtxt_user_students_table` VALUES (12, '2020', 0, '1');
+INSERT INTO `xtxt_user_students_table` VALUES (14, '2017', 0, '1');
 COMMIT;
 
 -- ----------------------------
@@ -203,10 +226,10 @@ CREATE TABLE `xtxt_user_teacher` (
 -- Records of xtxt_user_teacher
 -- ----------------------------
 BEGIN;
-INSERT INTO `xtxt_user_teacher` VALUES (1, '000121', '刘钟吉', 'c9268cca058eede53b7728ebd602efb8', '15070232051', NULL, '1');
+INSERT INTO `xtxt_user_teacher` VALUES (1, '000121', '刘钟吉', 'd4cf2511032549665cf1c52fd564eb7a', '15070232051', NULL, '1');
 INSERT INTO `xtxt_user_teacher` VALUES (2, '000827', '熊晓华', 'c9268cca058eede53b7728ebd602efb8', '15070232051', NULL, '1');
 INSERT INTO `xtxt_user_teacher` VALUES (3, '001058', '黄勤', 'c9268cca058eede53b7728ebd602efb8', '15070232051', NULL, '1');
-INSERT INTO `xtxt_user_teacher` VALUES (4, '001064', '王明文', 'c9268cca058eede53b7728ebd602efb8', '15070232051', NULL, '1');
+INSERT INTO `xtxt_user_teacher` VALUES (4, '001064', '王明文', 'c9268cca058eede53b7728ebd602efb8', '15070232051', 'qq群：2257845867', '1');
 INSERT INTO `xtxt_user_teacher` VALUES (5, '001067', '周琪云', 'c9268cca058eede53b7728ebd602efb8', '15070232051', NULL, '1');
 INSERT INTO `xtxt_user_teacher` VALUES (6, '001071', '李云清', 'c9268cca058eede53b7728ebd602efb8', '15070232051', NULL, '1');
 INSERT INTO `xtxt_user_teacher` VALUES (7, '001073', '杨庆红', 'c9268cca058eede53b7728ebd602efb8', '15070232050', '微信：xk2607780909', '1');

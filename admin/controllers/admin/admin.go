@@ -188,8 +188,10 @@ func SetStudentYearStatus(c *gin.Context) {
 	code.R(http.StatusOK, status, "", c)
 }
 
+
+
 //删除学生
 func DeleteStudent(c *gin.Context) {
-	codes := user.StudentDelete(c.Param("id"), c.Param("year"))
-	code.R(http.StatusOK, codes, "", c)
+	codes, msg := user.StudentDelete(c.Param("id"), c.Param("year"))
+	code.R(http.StatusOK, codes, map[string]interface{}{"msg": msg}, c)
 }

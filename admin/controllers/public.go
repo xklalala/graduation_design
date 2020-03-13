@@ -9,6 +9,7 @@ import (
 	"byxt/admin/router/request_struct"
 	"crypto/md5"
 	"encoding/hex"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -25,6 +26,7 @@ func GetPublicPem(c *gin.Context) {
 	var codes int
 	if err != nil {
 		codes = code.SECRET_KEY_GET_ERROR
+		fmt.Println(err.Error())
 	} else {
 		codes = code.SECRET_KEY_GET_SUCCESS
 	}

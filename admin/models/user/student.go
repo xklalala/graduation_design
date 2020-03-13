@@ -168,15 +168,18 @@ func StudetUpdate(stu request_struct.Admin_AddStu, year string) int {
 }
 
 //删除
-func StudentDelete(id, year string) int {
-	var codes int = code.SUCCESS
 
-	if err := mysql.Db.Exec(fmt.Sprintf("DELETE FROM xtxt_user_students_%s WHERE id = %s", year, id)); err.Error != nil {
-		codes = code.ERROR
+type deleteStu struct {
+	Code int 	`json:"code"`
+	Msg  string `json:"msg"`
+}
+func StudentDelete(id, year string) (int, string) {
+	var res deleteStu
+
+	if err := mysql.Db.Raw("CALL admin_delete_stu(?, ?, ?)", id, "xtxt_user_students_" + year, year).Scan(&res); err.Error != nil {
+		return code.ERROR, ""
 	}
-
-
-	return codes
+	return res.Code, res.Msg
 }
 
 func StudentSetStatus(id, year, setStatus string) int {
