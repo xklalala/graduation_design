@@ -22,15 +22,15 @@ func InitRouter() *gin.Engine {
 
 	r.StaticFile("/api/teacherExample.xlsx", "./static/download/教师上传示例.xlsx")
 	r.StaticFile("/api/studentExample.xlsx", "./static/download/学生上传示例.xlsx")
-//获取公钥
-r.GET("/api/getPublicSecret", controllers.GetPublicPem)
+	//获取公钥
+	r.GET("/api/getPublicSecret", controllers.GetPublicPem)
 
-r.GET("/ping", func(context *gin.Context) {
-	context.JSON(http.StatusOK, gin.H{
-		"code":    200,
-		"message": "ok",
+	r.GET("api/ping", func(context *gin.Context) {
+		context.JSON(http.StatusOK, gin.H{
+			"code":    200,
+			"message": "ok",
+		})
 	})
-})
 
 	user := r.Group("api/user:type")
 	{
@@ -67,6 +67,7 @@ r.GET("/ping", func(context *gin.Context) {
 		admin.POST("/setStatus", admins.SetTeacherStatus)
 		//批量导入教师账号
 		admin.POST("/upload", admins.TeacherMultipleAdd)
+		admin.GET("/tea_resert_pwd/:id", admins.Admin_ResertTeaPwd)
 
 		//获取学生年份列表
 		admin.GET("/getStuYearList", admins.Admin_StuYearList)
@@ -84,6 +85,7 @@ r.GET("/ping", func(context *gin.Context) {
 		admin.DELETE("/studentDelete/:id/:year", admins.DeleteStudent)
 		//设置年份学生状态
 		admin.POST("/stuSetStatus", admins.SetStudentYearStatus)
+		admin.PUT("/resertstupwd/:id/:year", admins.Admin_ResertStuPwd)
 	}
 
 	stu := r.Group("api/stu")

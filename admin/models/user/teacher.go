@@ -117,6 +117,14 @@ func DeleteTeacher(id int) int {
 	return code.SUCCESS
 }
 
+func TeaResertPwd(id int) int {
+	var teachers UserTeacher
+	if err := mysql.Db.Model(&teachers).Where("id = ?", id).Update("teacher_password", "c9268cca058eede53b7728ebd602efb8"); err.Error != nil {
+		return code.ERROR
+	}
+	return code.SUCCESS
+}
+
 //修改状态
 func SetStatus(id, status string) int {
 	var teachers UserTeacher

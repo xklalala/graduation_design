@@ -7,12 +7,6 @@ class Student extends React.Component {
     state = {
         visible: false,
     };
-    sys_error = (msg) => {
-        message.error(msg)
-    }
-    sys_success = (msg) => {
-        message.success(msg)
-    }
     handleCancel = () => {
 		this.setState({ visible: false });
     };
@@ -20,20 +14,18 @@ class Student extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-				let _this = this
-
                 Axios.defaults.headers.common["token"] = localStorage.getItem("token");
                 Axios.put(
 					MConfig.request_url + '/admin/addStuYear/'+ values.year, 
                 )
-                .then(function (response) {
+                .then( (response) => {
 					if (response.data.code === 10001) {
-                        _this.sys_success("添加成功, 请刷新页面")
+                        message.success("添加成功, 请刷新页面")
                         setTimeout(() => {
                             window.location.reload()
                         }, 50);
 					} else {
-						_this.sys_error("请检查是否重复")
+						message.error("请检查是否重复")
 					}
                 })
                 .catch(function (error) {
@@ -47,7 +39,7 @@ class Student extends React.Component {
     addYear = ()=> {
         const { getFieldDecorator } = this.props.form;
 		return (
-			<Form onSubmit={this.handleSubmit} className="login-form">
+			<Form onSubmit={this.handleSubmit.bind(this)} className="login-form">
 				<br/>
 				<h3 align="center">信息修改</h3>
 			<Form.Item>
@@ -71,7 +63,7 @@ class Student extends React.Component {
 				确定
 			</Button>
 			&nbsp;
-			<Button key="back" onClick={this.handleCancel}>
+			<Button key="back" onClick={this.handleCancel.bind(this)}>
 				取消
 			</Button>,
 			</Form.Item>

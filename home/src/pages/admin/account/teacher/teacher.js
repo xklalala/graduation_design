@@ -20,7 +20,6 @@ class TeacherAccount extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-				let _this = this
 				let publicSecritKey = localStorage.getItem("publicSecritKey")
                 let encrypt = new JSEncrypt()
                 encrypt.setPublicKey(publicSecritKey);
@@ -38,11 +37,11 @@ class TeacherAccount extends React.Component {
 					MConfig.request_url + '/admin/addTeacher', 
 					data
                 )
-                .then(function (response) {
+                .then((response) => {
 					if (response.data.code === 10001) {
-						_this.sys_success("添加成功")
+						message.success("添加成功")
 					} else {
-						_this.sys_error("请检查教号是否重复")
+						message.error("请检查教号是否重复")
 					}
                 })
                 .catch(function (error) {
@@ -115,7 +114,7 @@ class TeacherAccount extends React.Component {
 				确定
 			</Button>
 			&nbsp;
-			<Button key="back" onClick={this.handleCancel}>
+			<Button key="back" onClick={this.handleCancel.bind(this)}>
 				取消
 			</Button>,
 			</Form.Item>
@@ -130,14 +129,13 @@ class TeacherAccount extends React.Component {
         Axios.get(
             MConfig.request_url + '/admin/teacherExample.xlsx', 
 		)
-		.then(function (response){
+		.then((response) =>{
 		})
 		.finally(function(err){
 			console.log(err)
 		})
 	}
     render() {
-		const _this = this
         const props = {
 			name: 'filename',
 			action: 'http://127.0.0.1:8080/api/admin/upload',
@@ -148,9 +146,9 @@ class TeacherAccount extends React.Component {
 			onChange(info) {
 				if(typeof(info.file.response) != "undefined") {
 					if (info.file.response.code === 10001) {
-						_this.sys_success("添加成功, 请刷新页面");
+						message.success("添加成功, 请刷新页面");
 					}else {
-						_this.sys_error("批量添加失败，请检查教号是否重复")
+						message.error("批量添加失败，请检查教号是否重复")
 					}
 				}
 			},

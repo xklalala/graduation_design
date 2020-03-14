@@ -103,18 +103,17 @@ func StuUpdatePwd(userId, oldPwd, newPwd string, year string) int {
 	sql := fmt.Sprintf("SELECT student_password FROM xtxt_user_students_%s WHERE student_id = ? LIMIT 1", year)
 	err := mysql.Db.Raw(sql, userId).Scan(&student)
 	if err.Error != nil {
-		mlog.Info(err.Error)
 		return code.USER_USER_NOT_EXIST
 	}
 	//新旧密码不相等
 	if student.StudentPassword != oldPwd {
 		return code.PASSWORD_NOT_EQUALS
 	}
-
 	sql = fmt.Sprintf("UPDATE xtxt_user_students_%s SET student_password = ? WHERE student_id = ?", year)
-	 if err := mysql.Db.Raw(sql, newPwd, userId); err.Error != nil {
+	fmt.Println(sql)
+	if err := mysql.Db.Exec(sql, newPwd, userId); err.Error != nil {
 	 	return code.ERROR
-	 }
+	}
 	return codes
 }
 

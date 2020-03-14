@@ -36,7 +36,7 @@ func StuTabAll() (int, []UserStudentsTable) {
 		return code.SUCCESS, list
 	}
 }
-
+//设置一届学生，系统开放状态
 func SetStudentYearStatus(id, status string) int {
 	var tables UserStudentsTable
 	if err := mysql.Db.Model(tables).Where("id = ?", id).Update("status", status); err.Error != nil {
@@ -45,6 +45,16 @@ func SetStudentYearStatus(id, status string) int {
 	}
 	return code.SUCCESS
 }
+
+//更新学生密码
+func Admin_resert_stu_pwd(id int, year string) int {
+	sql := "UPDATE xtxt_user_students_" + year + " SET student_password = ? WHERE id = ?"
+	if err := mysql.Db.Exec(sql, "c9268cca058eede53b7728ebd602efb8", id); err.Error != nil {
+		return code.ERROR
+	}
+	return code.SUCCESS
+}
+
 //获得系统是否开放
 func GetSysIsOpen() (map[string]bool, error){
 	//首先从redis中读取数据状态

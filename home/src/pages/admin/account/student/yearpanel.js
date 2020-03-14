@@ -18,18 +18,17 @@ class YearPanel extends React.Component {
     }
     
     componentDidMount() {
-        let _this = this
         Axios.defaults.headers.common["token"] = localStorage.getItem("token");
         Axios.get(
             MConfig.request_url + '/admin/getStuYearList', 
         )
-        .then(function (response) {
+        .then((response) => {
             if (response.data.code === 10001) {
-                _this.setState({
+                this.setState({
                     data:response.data.data
                 })
             } else {
-                _this.sys_error("网络错误，请重试")
+                message.error("网络错误，请重试")
             }
         })
         .catch(function (error) {
@@ -75,20 +74,19 @@ class YearPanel extends React.Component {
             id:     id,
             status: checked===false?"0":"1"
         })
-        let _this = this
         Axios.defaults.headers.common["token"] = localStorage.getItem("token");
         Axios.post(
             MConfig.request_url + '/admin/stuSetStatus', 
             send
         )
-        .then(function (response) {
+        .then((response) => {
             if (response.data.code === 10001) {
-                _this.sys_success("ok")
-                _this.setState({
+                message.success("ok")
+                this.setState({
                     data:_data
                 })
             } else {
-                _this.sys_error("网络错误，请重试")
+                message.error("网络错误，请重试")
             }
         })
         .catch(function (error) {

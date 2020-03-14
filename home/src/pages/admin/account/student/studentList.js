@@ -12,9 +12,6 @@ class StudentList extends React.Component {
     sys_error = (msg) => {
         message.error(msg)
     }
-    sys_success = (msg) => {
-        message.success(msg)
-    }
     handleCancel = () => {
 		this.setState({ visible: false });
     };
@@ -23,8 +20,6 @@ class StudentList extends React.Component {
         this.props.form.validateFields((err, values) => {
             
             if (!err) {
-                // 
-                let _this = this
                 let data = getFormdata({
 					student_name: 	values.name,
 					student_id: 	values.student_id,
@@ -37,11 +32,11 @@ class StudentList extends React.Component {
 					MConfig.request_url + '/admin/addStudent/'+ this.props.match.params.year, 
 					data
                 )
-                .then(function (response) {
+                .then((response) => {
 					if (response.data.code === 10001) {
-						_this.sys_success("添加成功")
+						message.success("添加成功")
 					} else {
-						_this.sys_error("请检查学号是否重复")
+						message.error("请检查学号是否重复")
 					}
                 })
                 .catch(function (error) {
@@ -56,7 +51,7 @@ class StudentList extends React.Component {
     add_student = ()=> {
 		const { getFieldDecorator } = this.props.form;
 		return (
-			<Form onSubmit={this.handleSubmit} className="login-form">
+			<Form onSubmit={this.handleSubmit.bind(this)} className="login-form">
 				<br/>
 				<h3 align="center">新增学生账号</h3>
 			<Form.Item>
@@ -125,7 +120,7 @@ class StudentList extends React.Component {
 				确定
 			</Button>
 			&nbsp;
-			<Button key="back" onClick={this.handleCancel}>
+			<Button key="back" onClick={this.handleCancel.bind(this)}>
 				取消
 			</Button>,
 			</Form.Item>
@@ -134,17 +129,17 @@ class StudentList extends React.Component {
 	}
     
     componentDidMount() {
-        let _this = this
         Axios.defaults.headers.common["token"] = localStorage.getItem("token");
         Axios.get(
             MConfig.request_url + '/admin/getStuList/'+ this.props.match.params.year, 
         )
-        .then(function (response) {
+        .then((response) => {
             if (response.data.code === 10001) {
-                let result = new Array()
+                let result = []
                 for (let key in response.data.data) {
                     result.push(
                         {
+                            id: key,
                             key:                response.data.data[key]["id"],
                             name:               response.data.data[key]["student_name"],
                             student_id:         response.data.data[key]["student_id"],
@@ -154,7 +149,7 @@ class StudentList extends React.Component {
                         }
                     )
                 }
-                _this.setState({
+                this.setState({
                     data:result
                 })
             } else {
@@ -166,27 +161,28 @@ class StudentList extends React.Component {
         })
     }
 	
-    deleteStu = (id, index) => {
-        let _this = this
+    deleteStu = ( id, index) => {
         let _data = this.state.data
         Axios.defaults.headers.common["token"] = localStorage.getItem("token");
         Axios.delete(
-            MConfig.request_url + '/admin/studentDelete/'+ id+"/"+this.props.match.params.year, 
+            MConfig.request_url + '/admin/studentDelete/'+ index+"/"+this.props.match.params.year, 
         )
     
-        .then(function (response) {
+        .then( (response) =>{
+            console.log(response.data)
             if(response.data.code === 10008) {
-                _this.sys_error(response.data.data.msg)
+                message.error(response.data.data.msg)
                 return
             }
             if (response.data.code === 10001) {
-                _this.sys_success("ok")
-                _data.splice(index, 1)
-                _this.setState({
+                message.success("ok")
+                _data.splice(id, 1)
+                this.setState({
                     data:_data
                 })
+                console.log(this.state.data)
             } else {
-                _this.sys_success("发生了错误")
+                message.error("发生了错误")
             }
         })
         .catch(function (error) {
@@ -214,19 +210,19 @@ class StudentList extends React.Component {
               placeholder={`Search ${dataIndex}`}
               value={selectedKeys[0]}
               onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-              onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+              onPressEnter={this.handleSearch.bind(this, selectedKeys, confirm, dataIndex)}
               style={{ width: 188, marginBottom: 8, display: 'block' }}
             />
             <Button
               type="primary"
-              onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+              onClick={this.handleSearch.bind(this,selectedKeys, confirm, dataIndex)}
               icon="search"
               size="small"
               style={{ width: 90, marginRight: 8 }}
             >
               Search
             </Button>
-            <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            <Button onClick={this.handleReset.bind(this, clearFilters)} size="small" style={{ width: 90 }}>
               Reset
             </Button>
           </div>
@@ -256,7 +252,22 @@ class StudentList extends React.Component {
             text
             ),
     });
-
+    resertPwd = (id) => {
+        Axios.defaults.headers.common["token"] = localStorage.getItem("token");
+                Axios.put(
+					MConfig.request_url + '/admin/resertstupwd/'+id + '/' + this.props.match.params.year, 
+                )
+                .then((response) => {
+					if (response.data.code === 10001) {
+						message.success("ok")
+					} else {
+						message.error("发生了错误")
+					}
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+    }
     render() {
         const columns = [
             {
@@ -295,11 +306,11 @@ class StudentList extends React.Component {
             {
                 title: '操作',
                 key: 'cz',
-                render: (text, record, index) => 
+                render: (text, record) => 
                 <div>
                     <Popconfirm
                         title="你确定要删除这个账号吗?"
-                        onConfirm={()=>this.deleteStu(record.key, index)}
+                        onConfirm={this.deleteStu.bind(this,record.id, record.key)}
                         onCancel={null}
                         okText="Yes"
                         cancelText="No"
@@ -311,24 +322,21 @@ class StudentList extends React.Component {
                         删除
                     </Button>&nbsp;
                     </Popconfirm>
-                    {/* <Button 
-                        type="primary" 
-                        ghost 
-                        onClick={()=>this.edit_teacher({
-                            key:            index,
-                            id:             record.key,
-                            name:           record.name, 
-                            teacher_id:     record.teacher_id,
-                            phone:          record.phone,
-                            another_contact:record.another_contact,
-                            status:         record.status
-                        })}
-                        >编辑
-                        </Button> */}
+                    <Popconfirm
+                        title="你确定要删除这个账号吗?"
+                        onConfirm={this.resertPwd.bind(this, record.key)}
+                        onCancel={null}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Button 
+                            type="dash" 
+                            >密码重置
+                            </Button>
+                    </Popconfirm>
                 </div>
             }
         ];
-        const _this = this
         const props = {
 			name: 'filename',
 			action: 'http://127.0.0.1:8080/api/admin/multipleAddStu/'+this.props.match.params.year,
@@ -339,9 +347,9 @@ class StudentList extends React.Component {
 			onChange(info) {
 				if(typeof(info.file.response) != "undefined") {
 					if (info.file.response.code === 10001) {
-						_this.sys_success("添加成功, 请刷新页面");
+						message.success("添加成功, 请刷新页面");
 					}else {
-						_this.sys_error("批量添加失败，请检查教号是否重复")
+						message.error("批量添加失败，请检查教号是否重复")
 					}
 				}
 			},

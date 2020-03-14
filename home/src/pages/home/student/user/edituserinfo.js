@@ -4,6 +4,18 @@ import getFormdata from '../../../public/js/getFormData'
 import Axios from 'axios'
 import MConfig from '../../../config'
 class EditUserInfo extends React.Component {
+  constructor(props){
+    super(props)
+    this.state={ 
+      data: {
+		id	 : null,
+		name : null,
+		cname : null,
+		phone:       null  ,
+		another_contact:null,
+	  }
+    }
+  }
     sys_warning = (msg)=>{
         message.warning(msg)
     }
@@ -14,12 +26,11 @@ class EditUserInfo extends React.Component {
         message.error(msg)
     }
     componentDidMount() {
-        let self = this
         Axios.defaults.headers.common["token"] = localStorage.getItem("token");
         Axios.get(
             MConfig.request_url + '/stu/user', 
         )
-        .then(function (response) {
+        .then((response) => {
             if (response.data.code === 10001) {
                 let _data = {
 					id	 : response.data.data.id,
@@ -28,30 +39,21 @@ class EditUserInfo extends React.Component {
                     phone:         response.data.data.phone_number,
                     another_contact:response.data.data.another_contact,
                 }
-                self.setState({
+                this.setState({
                     data:_data
-                })
+				})
             } else {
-                self.sys_error("错误")
+                message.error("错误")
             }
         })
         .catch(function (error) {
             console.log(error);
         })
     }
-    data = {
-        name: null,
-        phone: null,
-        another_contact: null
-    }
-    state = {
-        data: this.data
-    }
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-				let _this = this
 				Axios.defaults.headers.common["token"] = localStorage.getItem("token");
 				let data = getFormdata({
 					stuName: values.name,
@@ -63,11 +65,11 @@ class EditUserInfo extends React.Component {
 				MConfig.request_url + '/stu/user',
 				data 
 			)
-			.then(function (response) {
+			.then((response) => {
 				if (response.data.code === 10001) {
-					_this.sys_success("ok")
+					message.success("ok")
 				} else {
-					_this.sys_error("失败")
+					message.error("失败")
 				}
 			})
 			.catch(function (error) {
@@ -79,7 +81,7 @@ class EditUserInfo extends React.Component {
       };
     
     render() {
-        const getdata = this.state.data
+		let getdata = this.state.data
         const { getFieldDecorator } = this.props.form;
         return (
           <Form onSubmit={this.handleSubmit} className="login-form">

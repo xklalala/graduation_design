@@ -64,8 +64,8 @@ type Teacher_Select_Stu struct {
 }
 //学生更新信息
 type StuInfo struct {
-	PhoneNumber     	string `form:"phone" binding:"required"`
-	AnotherContact  	string `form:"anoContact" binding:"required"`
+	PhoneNumber     	string `form:"phone"`
+	AnotherContact  	string `form:"anoContact"`
 	StudentClassName  	string `form:"stuCname" binding:"required"`
 	StudentName     	string `form:"stuName" binding:"required"`
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import Axios from 'axios'
 import MConfig from '../../../config'
-import getFormdata from '../../../public/js/getFormData'
+// import getFormdata from '../../../public/js/getFormData'
 import { Row, Col , Card, Tag, Popconfirm, message} from 'antd'
 
 class StuXt extends React.Component {
@@ -15,14 +15,13 @@ class StuXt extends React.Component {
         message.error(msg)
     }
     componentDidMount() {
-        let _this = this
       Axios.defaults.headers.common["token"] = localStorage.getItem("token");
       Axios.get(
           MConfig.request_url + '/stu/xt/self', 
       )
-      .then(function (response) {
+      .then((response) => {
           if (response.data.code === 10001) {
-              _this.setState({
+              this.setState({
                   data: response.data.data
               })
           } else {
@@ -33,21 +32,20 @@ class StuXt extends React.Component {
       })
   }
   confirm = (id, index, status)=> {
-      if(status == "1") {
+      if(status === "1") {
         this.sys_error("对不起，选题已确定，无法删除！")
         return
       }
-    let _this = this
     Axios.defaults.headers.common["token"] = localStorage.getItem("token");
     Axios.delete(MConfig.request_url + '/stu/xt/'+id, )
-    .then(function (response) {
+    .then((response) => {
         if (response.data.code === 10001) {
-            _this.sys_success("删除成功");
+            message.success("删除成功");
             setTimeout(() => {
                 window.location.reload()
             }, 50);
         } else {
-            _this.sys_error(response.data.data.msg)
+            message.error(response.data.data.msg)
         }
     })
     .catch(function (error) {

@@ -14,12 +14,12 @@ class EditPwd extends React.Component {
     sys_error = (msg)=>{
         message.error(msg)
     }
-    handleSubmit = e => {
+    pwdHandleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 if(values.newPwd === values.oldPwd) {
-                    this.sys_warning("新旧密码相同, 请重新输入新密码")
+                    message.warning("新旧密码相同, 请重新输入新密码")
                 } else {
 
                     let publicSecritKey = localStorage.getItem("publicSecritKey")
@@ -32,18 +32,17 @@ class EditPwd extends React.Component {
                         old_pwd: oldPwd,
                         new_pwd: newPwd,
                     })
-                    let self = this
                     Axios.defaults.headers.common["token"] = localStorage.getItem("token");
                     Axios.post(
                         MConfig.request_url + '/tea/updateTeacherPwd', 
                         data
                     )
-                    .then(function (response) {
+                    .then((response) => {
                         if (response.data.code === 10001) {
-                            self.sys_success("修改成功")
+                          message.success("修改成功")
                             
                         } else {
-                            self.sys_error("错误")
+                          message.error(response.data.message)
                         }
                     })
                     .catch(function (error) {
@@ -57,7 +56,7 @@ class EditPwd extends React.Component {
       render() {
         const { getFieldDecorator } = this.props.form;
         return (
-          <Form onSubmit={this.handleSubmit} className="login-form">
+          <Form onSubmit={this.pwdHandleSubmit} className="login-form">
             <Form.Item>
               {getFieldDecorator('oldPwd', {
                 rules: [

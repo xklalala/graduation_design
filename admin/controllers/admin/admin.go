@@ -93,6 +93,19 @@ func TeacherMultipleAdd(c *gin.Context) {
 	code.R(http.StatusOK, codes, "", c)
 }
 
+//管理员重置教师密码
+func Admin_ResertTeaPwd(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	var status int
+	if err != nil {
+		status = code.REQUEST_PARMS_ERROR
+	} else {
+		status = user.TeaResertPwd(id)
+	}
+	code.R(http.StatusOK, status, "", c)
+}
+
+
 //创建学生表（添加年份）
 func Admin_AddStudentYear(c *gin.Context) {
 	year, err := strconv.Atoi(c.Param("year"))
@@ -188,7 +201,17 @@ func SetStudentYearStatus(c *gin.Context) {
 	code.R(http.StatusOK, status, "", c)
 }
 
-
+//重置学生密码
+func Admin_ResertStuPwd(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	var status int
+	if err != nil {
+		status = code.REQUEST_PARMS_ERROR
+	} else {
+		status = admin.Admin_resert_stu_pwd(id, c.Param("year"))
+	}
+	code.R(http.StatusOK, status, "", c)
+}
 
 //删除学生
 func DeleteStudent(c *gin.Context) {

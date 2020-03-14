@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Input, Button, Icon, Switch, Modal, Form, Popconfirm, message } from 'antd';
+import { Table, Input, Button, Icon, Switch, Modal, Form, message, Popconfirm } from 'antd';
 import Highlighter from 'react-highlight-words';
 import MConfig from '../../../config'
 // import getFormdata from '../../../public/js/getFormData'
@@ -29,9 +29,9 @@ class TeacherList extends React.Component {
         Axios.get(
             MConfig.request_url + '/admin/teacherlist', 
         )
-        .then(function (response) {
+        .then((response) => {
             if (response.data.code === 200) {
-                let result = new Array()
+                let result = []
                 for (let key in response.data.data) {
                     result.push(
                         {
@@ -65,19 +65,19 @@ class TeacherList extends React.Component {
               placeholder={`Search ${dataIndex}`}
               value={selectedKeys[0]}
               onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-              onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+              onPressEnter={this.handleSearch.bind(this,selectedKeys, confirm, dataIndex)}
               style={{ width: 188, marginBottom: 8, display: 'block' }}
             />
             <Button
               type="primary"
-              onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+              onClick={this.handleSearch.bind(this,selectedKeys, confirm, dataIndex)}
               icon="search"
               size="small"
               style={{ width: 90, marginRight: 8 }}
             >
               Search
             </Button>
-            <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            <Button onClick={this.handleReset.bind(this,clearFilters)} size="small" style={{ width: 90 }}>
               Reset
             </Button>
           </div>
@@ -122,7 +122,6 @@ class TeacherList extends React.Component {
     };
     //禁用或者启用
     disable_OR_enable = (checked,id, index) => {
-        let _this = this
         let send = getFormdata({
             id:     id,
             status: checked===false?"0":"1"
@@ -133,15 +132,15 @@ class TeacherList extends React.Component {
             MConfig.request_url + '/admin/setStatus',
             send
         )
-        .then(function (response) {
+        .then((response) => {
             if (response.data.code === 10001) {
-                _this.sys_success("ok")
+                message.success("ok")
                 _data[index].status = checked===true?"1":"0"
-                _this.setState({
+                this.setState({
                     data: _data
                 })
             } else {
-                _this.sys_error("发生了错误")
+                message.error("发生了错误")
             }
         })
 
@@ -149,23 +148,17 @@ class TeacherList extends React.Component {
         
         
     }
-    //删除教师
-    delete_teacher = (id, index) => {
-        let _data = this.state.data
-        let _this = this
+    //重置密码
+    resert_pwd = (id) => {
         Axios.defaults.headers.common["token"] = localStorage.getItem("token");
         Axios.get(
-            MConfig.request_url + '/admin/delete/'+id,
+            MConfig.request_url + '/admin/tea_resert_pwd/'+id,
         )
-        .then(function (response) {
+        .then((response) => {
             if (response.data.code === 10001) {
-                _this.sys_success("删除成功")
-                _data.splice(index, 1)
-                _this.setState({
-                    data:_data
-                })
+                message.success("ok")
             } else {
-                _this.sys_error("发生了错误")
+                message.error("发生了错误")
             }
         })
 
@@ -184,7 +177,6 @@ class TeacherList extends React.Component {
         this.setState({ visible: false, submit:false });
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                let _this = this
 				let publicSecritKey = localStorage.getItem("publicSecritKey")
                 let encrypt = new JSEncrypt()
                 encrypt.setPublicKey(publicSecritKey);
@@ -204,19 +196,19 @@ class TeacherList extends React.Component {
 					MConfig.request_url + '/admin/editTeacher', 
 					send
                 )
-                .then(function (response) {
+                .then((response) => {
 					if (response.data.code === 10001) {
-                        _this.sys_success("修改成功")
+                        message.success("修改成功")
                         
                         data[values.key]["teacher_name"]     = values.name
                         data[values.key]["teacher_id"]       = values.teacher_id
                         data[values.key]["phone"]            = values.phone
                         data[values.key]["another_contact"]  = values.another_contact
-                        _this.setState({
+                        this.setState({
                             data:data
                         })
 					} else {
-						_this.sys_error("发生了错误，请检查教号")
+						message.error("发生了错误，请检查教号")
 					}
                 })
                 .catch(function (error) {
@@ -329,7 +321,6 @@ class TeacherList extends React.Component {
             )
         }
     }
-
     render() {
         const { visible } = this.state;
         const columns = [
@@ -376,21 +367,7 @@ class TeacherList extends React.Component {
                 key: 'cz',
                 render: (text, record, index) => 
                 <div>
-                    {/* <Popconfirm
-                        title="你确定要删除这个账号吗?"
-                        onConfirm={()=>this.delete_teacher(record.key, index)}
-                        onCancel={null}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <Button
-                            type="danger"
-                            ghost
-                        >
-                        删除
-                    </Button>&nbsp;
-                    </Popconfirm> */}
-                    <Button 
+                        <Button 
                         type="primary" 
                         ghost 
                         onClick={()=>this.edit_teacher({
@@ -404,6 +381,21 @@ class TeacherList extends React.Component {
                         })}
                         >编辑
                         </Button>
+                        &nbsp;
+                    <Popconfirm
+                        title="你确定要重置这个账号的密码吗?"
+                        onConfirm={this.resert_pwd.bind(this,record.key)}
+                        onCancel={null}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Button
+                            type="dashed"
+                        >
+                        密码重置
+                    </Button>&nbsp;
+                    </Popconfirm>
+
                 </div>
             }
         ];

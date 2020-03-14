@@ -1,7 +1,6 @@
 import React from 'react'
 import Axios from 'axios'
 import MConfig from '../../../config'
-import getFormdata from '../../../public/js/getFormData'
 import { SmileOutlined } from '@ant-design/icons';
 import {Drawer, Table, Row, Input, Col, Select, notification, message} from 'antd'
   const { Option } = Select;
@@ -29,14 +28,13 @@ class XtuXt extends React.Component {
 	  this.preparationCondition()
     }
     componentDidMount() {
-      	let _this = this
         Axios.defaults.headers.common["token"] = localStorage.getItem("token");
         Axios.get(
             MConfig.request_url + '/stu/xt', 
         )
-        .then(function (response) {
+        .then((response) => {
             if (response.data.code === 10001) {
-              _this.setState({
+              this.setState({
 				data:response.data.data,
 				origin:response.data.data
               })
@@ -52,7 +50,7 @@ class XtuXt extends React.Component {
 	isSearch = () => {
 		let _searchCondition = this.state.searchCondition
 		for (let i in _searchCondition) {
-			if(_searchCondition[i].length != 0) {
+			if(_searchCondition[i].length !== 0) {
 				return true
 			}			
 		}
@@ -113,11 +111,11 @@ class XtuXt extends React.Component {
 			
 			//   2. 姓名搜索
 			if ( !this.isEmpty(condition.teacher_name)) {
-				var reg = new RegExp(condition.teacher_name)
+				var reg2 = new RegExp(condition.teacher_name)
 
 				let result2 = []
 				for (let i in result) {
-					if (result[i].teacher_name.match(reg)) {
+					if (result[i].teacher_name.match(reg2)) {
 						result2.push(result[i])
 					}
 				}
@@ -158,7 +156,7 @@ class XtuXt extends React.Component {
 		}
 	}
 	isEmpty = (obj) => {
-		if(typeof obj == "undefined" || obj == null || obj == ""){
+		if(typeof obj === "undefined" || obj === null || obj === ""){
 			return true;
 		}else{
 			return false;
@@ -168,16 +166,15 @@ class XtuXt extends React.Component {
         message.error(msg)
     }
 	stuSelectXt = (id) => {
-		let _this = this
         Axios.defaults.headers.common["token"] = localStorage.getItem("token");
         Axios.put(
             MConfig.request_url + '/stu/xt/'+id, 
         )
-        .then(function (response) {
+        .then((response) =>{
             if (response.data.code === 10001) {
-				_this.openNotification(response.data.data.num)
+				this.openNotification(response.data.data.num)
             } else {
-				_this.sys_error(response.data.data.msg) 
+				message.error(response.data.data.msg) 
             }
         })
         .catch(function (error) {
@@ -261,7 +258,6 @@ class XtuXt extends React.Component {
 			  ),
 			},
 		  ];
-        const children = [];
         return (
             <div>
 				<Drawer

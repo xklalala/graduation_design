@@ -16,18 +16,17 @@ sys_error = (msg) => {
 }
 
 componentDidMount() {
-    let _this = this
     Axios.defaults.headers.common["token"] = localStorage.getItem("token");
     Axios.get(
         MConfig.request_url + '/tea/getStuYearList', 
     )
-    .then(function (response) {
+    .then((response) => {
         if (response.data.code === 10001) {
-            _this.setState({
+            this.setState({
                 data:response.data.data
             })
         } else {
-            _this.sys_error("网络错误，请重试")
+            message.error("网络错误，请重试")
         }
     })
     .catch(function (error) {
@@ -48,6 +47,7 @@ showItem = () => {
 render() {
         return (
             <div>
+                <h2 text-align="center">选题管理(请选择毕业年份)</h2>
                 <Timeline>
                     {this.showItem()}
                 </Timeline>

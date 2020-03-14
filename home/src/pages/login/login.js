@@ -42,11 +42,10 @@ class Login extends React.Component {
                 }
 
                 let publicSecritKey
-                let self = this
                 Axios.get(
                     MConfig.request_url + '/getPublicSecret', 
                 )
-                .then(function (response) {
+                .then((response) => {
                     
                     if (response.data.code === 10005) {
                         //公钥获取成功
@@ -68,10 +67,10 @@ class Login extends React.Component {
                             MConfig.request_url + '/user/login', 
                             data
                         )
-                        .then(function (response) {
+                        .then((response) => {
                             // console.log(response.data.data)
                             if (response.data.code === 20005) {
-                                self.login_success()
+                                this.login_success()
                                 localStorage.setItem("token", response.data.data.token)
                                 localStorage.setItem("name", response.data.data.username)
                                 localStorage.setItem("by_year", response.data.data.by_year)
@@ -79,16 +78,16 @@ class Login extends React.Component {
                                 localStorage.setItem("user_id", values.username)
                                 Axios.defaults.headers.common["token"] = localStorage.getItem("token");
                                 if (values.loginType === "adm") {
-                                    self.props.history.push("/admin/welcome")
+                                    this.props.history.push("/admin/welcome")
                                 } else if(values.loginType === "tea") {
-                                    self.props.history.push("/teacher")
+                                    this.props.history.push("/teacher/setItem")
                                 } else if (values.loginType === "stu") {
-                                    self.props.history.push("/stu")
+                                    this.props.history.push("/stu")
                                 }
                                 // 
                                 
                             } else {
-                                self.login_error(response.data.message)
+                                this.login_error(response.data.message)
                             }
                         })
                         .catch(function (error) {
@@ -96,7 +95,7 @@ class Login extends React.Component {
                         })
                     //获取失败
                     } else {
-                        self.publicSecritKey_error()
+                        this.publicSecritKey_error()
                     }
                 })
                 .catch(function (error) {

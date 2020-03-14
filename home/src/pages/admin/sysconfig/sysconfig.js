@@ -65,21 +65,20 @@ class SysConfig extends React.Component {
     componentDidMount() {
         let teaStatus
         let stuStatus
-        let _this = this
         Axios.defaults.headers.common["token"] = localStorage.getItem("token");
         Axios.get(
             MConfig.request_url + '/admin/getTeaAndStuStatus', 
         )
-        .then(function (response){
+        .then((response) =>{
             if (response.data.code === 10001) {
                 teaStatus = response.data.data.TEACHER_ENTRY==="true"?true:false
                 stuStatus = response.data.data.STUDENT_ENTRY==="true"?true:false
-                _this.setState({
+                this.setState({
                     teaStatus:teaStatus,
                     stuStatus:stuStatus,
                 })
             } else {
-                _this.authError(response.data.message)
+                this.authError(response.data.message)
                 localStorage.clear()
                 return
             }
@@ -99,7 +98,7 @@ class SysConfig extends React.Component {
             MConfig.request_url + '/admin/setStuEntry', 
             data
         )
-        .then(function (response){
+        .then((response) =>{
             if (response.data.code === 10001) {
                 self.setSysEntrySuccess()
             } else {
@@ -121,7 +120,7 @@ class SysConfig extends React.Component {
             MConfig.request_url + '/admin/setTeaEntry', 
             data
         )
-        .then(function (response){
+        .then((response) =>{
            if (response.data.code === 10001) {
                self.setSysEntrySuccess()
            } else {
@@ -137,7 +136,7 @@ class SysConfig extends React.Component {
         Axios.get(
             MConfig.request_url + '/admin/updateSecretKey', 
         )
-        .then(function (response){
+        .then((response) =>{
            if (response.data.code === 10001) {
                self.setSysEntrySuccess()
            } else {

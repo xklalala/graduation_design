@@ -38,7 +38,7 @@ class EditPwd extends React.Component {
                         MConfig.request_url + '/admin/updatePwd', 
                         data
                     )
-                    .then(function (response) {
+                    .then((response) => {
                         if (response.data.code === 10001) {
                             self.sys_success("修改成功")
                             

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
-import { Route, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 // import Sysconf from './sysconfig/sysconfig'
 import MyHeader from '../../../admin/myheader/myheader'
 import MenuList from '../routerConfig'

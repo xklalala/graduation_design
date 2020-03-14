@@ -19,7 +19,7 @@ class EditUserInfo extends React.Component {
         Axios.get(
             MConfig.request_url + '/tea/getTeacherInfo/'+localStorage.getItem("user_id"), 
         )
-        .then(function (response) {
+        .then((response) => {
             if (response.data.code === 10001) {
                 let _data = {
 					id	 : response.data.data.id,
@@ -50,7 +50,6 @@ class EditUserInfo extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-				let _this = this
 				Axios.defaults.headers.common["token"] = localStorage.getItem("token");
 				let data = getFormdata({
 					id: values.id,
@@ -62,11 +61,11 @@ class EditUserInfo extends React.Component {
 				MConfig.request_url + '/tea/updateTeacherInfo',
 				data 
 			)
-			.then(function (response) {
+			.then((response) => {
 				if (response.data.code === 10001) {
-					_this.sys_success("ok")
+					message.success("ok")
 				} else {
-					_this.sys_error("失败")
+					message.error("失败")
 				}
 			})
 			.catch(function (error) {

@@ -37,20 +37,19 @@ class XtDetail extends React.Component {
     }
     confirm = (id, index)=> {
         let _data = this.state.data
-        let _this = this
         Axios.defaults.headers.common["token"] = localStorage.getItem("token");
         Axios.delete(MConfig.request_url + '/tea/xt/'+id, )
-        .then(function (response) {
+        .then((response) => {
             if (response.data.code === 10001) {
-                _this.sys_success("删除成功");
+                message.success("删除成功");
                 _data.splice(index, 1)
-                _this.setState({
+                this.setState({
                     data:_data
                 })
             } else if (response.data.code === 10008) {
-                _this.sys_error(response.data.data.msg)
+                message.error(response.data.data.msg)
             }else {
-                _this.sys_error("网络错误，请重试")
+                message.error("网络错误，请重试")
             }
         })
         .catch(function (error) {
@@ -61,22 +60,21 @@ class XtDetail extends React.Component {
     //     message.error('Click on No');
     // }
     componentDidMount() {
-        let _this = this
 
         Axios.defaults.headers.common["token"] = localStorage.getItem("token");
         Axios.get(MConfig.request_url + '/tea/xt/'+this.props.match.params.year, )
-        .then(function (response) {
+        .then((response) => {
             if (response.data.code === 10001) {
                 let res  = []
                 for(let i in response.data.data) {
                     res.push(response.data.data[i])
                 }
-                _this.setState({
+                this.setState({
                     data: res
                 })
             }
              else {
-                _this.sys_error("网络错误，请重试")
+                message.error("网络错误，请重试")
             }
         })
         .catch(function (error) {
@@ -102,17 +100,16 @@ class XtDetail extends React.Component {
         })
     }
     selectStu_show =  (id) => {
-        let _this = this
 
         Axios.defaults.headers.common["token"] = localStorage.getItem("token");
         Axios.get(MConfig.request_url + '/tea/xt/'+this.props.match.params.year+'/'+id, )
-        .then(function (response) {
+        .then((response) => {
             if (response.data.code === 10001) {
-                _this.setState({
+                this.setState({
                     selectStuList:response.data.data
                 })
             } else {
-                _this.sys_error("网络错误，请重试")
+                message.error("网络错误，请重试")
             }
         })
         .catch(function (error) {
@@ -187,7 +184,6 @@ class XtDetail extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                let _this = this
                 let send = getFormdata({
                     title: values.title,
                     type: values.type,
@@ -199,18 +195,18 @@ class XtDetail extends React.Component {
                     MConfig.request_url + '/tea/xt/'+this.props.match.params.year, 
                     send
                 )
-                .then(function (response) {
+                .then((response) =>{
                     if (response.data.code === 10001) {
-                        _this.setState({
+                        this.setState({
                             visible:false
                         })
-                        _this.sys_success("添加成功")
+                        message.success("添加成功")
                         setTimeout(() => {
                             window.location.reload()
                         }, 50);
                         
                     } else {
-                        _this.sys_error("网络错误，请重试")
+                        message.error("网络错误，请重试")
                     }
                 })
                 .catch(function (error) {
@@ -229,7 +225,6 @@ class XtDetail extends React.Component {
         });
     };
     selectStu_confirm = (value) => {
-        let _this = this
         let send = getFormdata({
             id: value.id,
             xt_id: value.xt_id,
@@ -239,14 +234,14 @@ class XtDetail extends React.Component {
                     MConfig.request_url + '/tea/selectStu', 
                     send
                 )
-                .then(function (response) {
+                .then((response) =>{
                     if (response.data.code === 10001) {
-                        _this.sys_success("ok")
+                        message.success("ok")
                         setTimeout(() => {
                             window.location.reload()
                         }, 50);
                     } else {
-                        _this.sys_error("网络错误，请重试")
+                        message.error("网络错误，请重试")
                     }
                 })
                 .catch(function (error) {
